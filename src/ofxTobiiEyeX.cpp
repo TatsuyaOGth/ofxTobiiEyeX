@@ -10,7 +10,7 @@ static TX_HANDLE g_hGlobalInteractorSnapshot = TX_EMPTY_HANDLE;
 // get values
 static float smGazeX = 0.0f;
 static float smGazeY = 0.0f;
-static long long smEyeXTimestamp = 0;
+static double smEyeXTimestamp = 0;
 
 /*
 * Initializes g_hGlobalInteractorSnapshot with an interactor that has the Gaze Point behavior.
@@ -157,7 +157,7 @@ float ofxTobiiEyeX::getGazeY()
 	return smGazeY;
 }
 
-long long ofxTobiiEyeX::getEyeXTimestamp()
+double ofxTobiiEyeX::getEyeXTimestamp()
 {
 	return smEyeXTimestamp;
 }

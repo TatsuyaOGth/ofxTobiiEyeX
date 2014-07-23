@@ -23,7 +23,7 @@ public:
 	
 	float getGazeX();
 	float getGazeY();
-	long long getEyeXTimestamp();
+	TX_REAL getEyeXTimestamp();
 };
 
 #endif
