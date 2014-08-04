@@ -7,6 +7,8 @@
 
 #include "eyex\EyeX.h"
 
+#define TOBII_TX_DETAIL
+
 class ofxTobiiEyeX
 {
 	TX_CONTEXTHANDLE mHContext;
@@ -18,9 +20,10 @@ public:
 
 	bool setup();
 	
-	float getGazeX();
-	float getGazeY();
+	TX_REAL getGazeX();
+	TX_REAL getGazeY();
 	TX_REAL getEyeXTimestamp();
+	bool getPresent();
 };
 
 #endif

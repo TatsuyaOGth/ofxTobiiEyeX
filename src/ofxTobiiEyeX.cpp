@@ -8,9 +8,10 @@ static const TX_STRING InteractorId = "ofxTobiiEyeX";
 static TX_HANDLE g_hGlobalInteractorSnapshot = TX_EMPTY_HANDLE;
 
 // get values
-static float smGazeX = 0.0f;
-static float smGazeY = 0.0f;
-static double smEyeXTimestamp = 0;
+static TX_REAL smGazeX = 0.0f;
+static TX_REAL smGazeY = 0.0f;
+static TX_REAL smEyeXTimestamp = 0;
+static bool smPresent = false;
 
 /*
 * Initializes g_hGlobalInteractorSnapshot with an interactor that has the Gaze Point behavior.
@@ -115,6 +116,73 @@ void TX_CALLCONVENTION HandleEvent(TX_CONSTHANDLE hAsyncData, TX_USERPARAM userP
 	txReleaseObject(&hEvent);
 }
 
+/*
+ * Handles a state-changed notification, or the response from a get-state operation.
+ */
+void OnStateReceived(TX_HANDLE hStateBag)
+{
+	TX_INTEGER status;
+	TX_BOOL success;
+	TX_SIZE2 displaySize;
+	TX_SIZE2 screenBounds;
+
+	success = (txGetStateValueAsInteger(hStateBag, TX_STATEPATH_STATE, &status) == TX_RESULT_OK);
+	if (success) {
+		switch (status) {
+		case TX_EYETRACKINGDEVICESTATUS_TRACKING:
+			printf("Eye Tracking Device Status: 'TRACKING'. That means that the eye tracker is up and running and trying to \ntrack your eyes.\n");
+			break;
+
+		default:
+			printf("The eye tracking device is not tracking. Could be a that the eye tracker is not connected, or that a screen \nsetup or user calibration is missing. The status code is %d.\n", status);
+		}
+	}
+
+	success = (txGetStateValueAsSize2(hStateBag, TX_STATEPATH_DISPLAYSIZE, &displaySize) == TX_RESULT_OK);
+	if (success)
+	{
+		printf("Display Size: %5.2f x %5.2f mm\n", displaySize.Width, displaySize.Height);
+	}
+
+	success = (txGetStateValueAsSize2(hStateBag, TX_STATEPATH_SCREENBOUNDS, &screenBounds) == TX_RESULT_OK);
+	if (success)
+	{
+		printf("Screen Bounds: %5.0f x %5.0f pixels\n\n", screenBounds.Width, screenBounds.Height);
+	}
+
+	// NOTE. The following line can be uncommented to catch errors during development. In production use there isn't much 
+	// we can do if we receive a malformed event, run out of memory, or for some other reason fail to read the contents of an event.
+	//assert(success);
+
+	txReleaseObject(&hStateBag);
+}
+
+/*
+ * Handles state changed notifications.
+ */
+void TX_CALLCONVENTION OnPresenceStateChanged(TX_CONSTHANDLE hAsyncData, TX_USERPARAM userParam)
+{
+	TX_RESULT result = TX_RESULT_UNKNOWN;
+	TX_HANDLE hStateBag = TX_EMPTY_HANDLE;
+	TX_BOOL success;
+	TX_INTEGER presenceData;
+
+	if (txGetAsyncDataResultCode(hAsyncData, &result) == TX_RESULT_OK && txGetAsyncDataContent(hAsyncData, &hStateBag) == TX_RESULT_OK)
+	{		
+		success = (txGetStateValueAsInteger(hStateBag, TX_STATEPATH_PRESENCEDATA, &presenceData) == TX_RESULT_OK);
+		if (success)
+		{
+			if (presenceData == TX_PRESENCEDATA_PRESENT) {
+				ofLogNotice("User is present");
+				smPresent = true;
+			} else {
+				ofLogNotice("User is NOT present");
+				smPresent = false;
+			}
+		}
+	}
+}
+
 
 ofxTobiiEyeX::ofxTobiiEyeX():
 mHContext(TX_EMPTY_HANDLE)
@@ -134,6 +202,7 @@ bool ofxTobiiEyeX::setup()
 {
 	TX_TICKET hConnectionStateChangedTicket = TX_INVALID_TICKET;
 	TX_TICKET hEventHandlerTicket = TX_INVALID_TICKET;
+	TX_TICKET hPresenceStateChangedTicket = TX_INVALID_TICKET;
 	BOOL success;
 
 	// initialize and enable the context that is our link to the EyeX Engine.
@@ -142,22 +211,28 @@ bool ofxTobiiEyeX::setup()
 	success &= InitializeGlobalInteractorSnapshot(mHContext);
 	success &= txRegisterConnectionStateChangedHandler(mHContext, &hConnectionStateChangedTicket, OnEngineConnectionStateChanged, NULL) == TX_RESULT_OK;
 	success &= txRegisterEventHandler(mHContext, &hEventHandlerTicket, HandleEvent, NULL) == TX_RESULT_OK;
+	success &= txRegisterStateChangedHandler(mHContext, &hPresenceStateChangedTicket, TX_STATEPATH_PRESENCEDATA, OnPresenceStateChanged, NULL) == TX_RESULT_OK;
 	success &= txEnableConnection(mHContext) == TX_RESULT_OK;
 
 	return success;
 }
 
-float ofxTobiiEyeX::getGazeX()
+TX_REAL ofxTobiiEyeX::getGazeX()
 {
 	return smGazeX;
 }
 
-float ofxTobiiEyeX::getGazeY()
+TX_REAL ofxTobiiEyeX::getGazeY()
 {
 	return smGazeY;
 }
 
-double ofxTobiiEyeX::getEyeXTimestamp()
+TX_REAL ofxTobiiEyeX::getEyeXTimestamp()
 {
 	return smEyeXTimestamp;
+}
+
+bool ofxTobiiEyeX::getPresent()
+{
+	return smPresent;
 }
