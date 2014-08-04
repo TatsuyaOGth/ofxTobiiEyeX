@@ -1,11 +1,14 @@
 #ifndef __OFX_TOBII_EYEX__
 #define __OFX_TOBII_EYEX__
 
-//#include <Windows.h>
 #include "ofMain.h"
 #include <assert.h>
 
-#include "eyex\EyeX.h"
+#ifdef _WIN32
+    #include "eyex\EyeX.h"
+#elif __APPLE__
+    #include "eyex/EyeX.h"
+#endif
 
 #define TOBII_TX_DETAIL
 
