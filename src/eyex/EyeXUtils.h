@@ -3,18 +3,8 @@
 * EyeXUtils.h
 *********************************************************************************************************************/
 
-static const char* __txDbgObject(TX_CONSTHANDLE hObject)
-{
-    static char buf[65536 * 16];
-    TX_SIZE bufSize;
-
-    bufSize = sizeof(buf);
-    txFormatObjectAsText(hObject, buf, &bufSize);
-    return buf;
-}
-
-typedef const char* (*TX_DEBUGOBJECT)(TX_CONSTHANDLE hObject);
-static TX_DEBUGOBJECT txDebugObject = __txDbgObject;
+#if !defined(__TOBII_TX_UTILS__H__)
+#define __TOBII_TX_UTILS__H__
 
 /*********************************************************************************************************************/
 
@@ -28,30 +18,31 @@ namespace Tx
 {    
     namespace Utils
     {
-        class ScopedHandle
+		template <typename THandle>
+        class ScopedHandleTemplate
         {
         public:
-            ScopedHandle(TX_HANDLE handle = TX_EMPTY_HANDLE)
+            ScopedHandleTemplate(THandle handle = TX_EMPTY_HANDLE)
                 : _handle(handle)
             {}
 
-            ~ScopedHandle()
+            ~ScopedHandleTemplate()
             {
                 SafeRelease();
             }
 
-            TX_HANDLE* operator &() 
+            THandle* operator &() 
             {
                 SafeRelease();
                 return &_handle;
-            }
+            }            
 
-            operator const TX_HANDLE () const
+            operator const THandle () const
             {
                 return _handle;
             }
 
-            TX_HANDLE Detach()
+            THandle Detach()
             {
                 auto handle = _handle;
                 _handle = TX_EMPTY_HANDLE;
@@ -62,7 +53,7 @@ namespace Tx
             {
                 return _handle != TX_EMPTY_HANDLE;
             }
-
+				
         private:
             void SafeRelease()
             {
@@ -74,8 +65,10 @@ namespace Tx
             }
 
         private:
-            TX_HANDLE _handle;
+            THandle _handle;
         };
+
+		typedef ScopedHandleTemplate<TX_HANDLE> ScopedHandle;
 
         template <typename TElement>
         inline TX_RESULT GetBufferData(std::vector<TElement>& targetBuffer, std::function<TX_RESULT (TElement*, TX_SIZE*)> fnGetBuf)
@@ -137,23 +130,169 @@ namespace Tx
             };
 
             return GetString(pTargetString, fnGetString);
-        }
-
-        static const char* __txDbgScoped(const Tx::Utils::ScopedHandle& hObject)
-        {
-            static char buf[65536 * 16];
-            TX_SIZE bufSize;
-
-            bufSize = sizeof(buf);
-            txFormatObjectAsText(hObject, buf, &bufSize);
-            return buf;
-        }
-
-        typedef const char* (*TX_DEBUGSCOPEDHANDLE)(const Tx::Utils::ScopedHandle& hObject);
-        static TX_DEBUGSCOPEDHANDLE txDebugScopedHandle = __txDbgScoped;
-    }
+        }        
+    }   
 }
 
 #endif /* defined(__cplusplus) */
+
+#if !defined(TX_NODEBUGOBJECT)
+
+static const char* __txDbgObject(TX_CONSTHANDLE hObject)
+{
+    static char buf[65536];
+    TX_SIZE bufSize;
+
+    bufSize = sizeof(buf);
+    txFormatObjectAsText(hObject, buf, &bufSize);
+    return buf;
+}
+
+typedef const char* (*TX_DEBUGOBJECT)(TX_CONSTHANDLE hObject);
+static TX_DEBUGOBJECT txDebugObject = __txDbgObject;
+
+#endif /* !defined(TX_NODEBUGOBJECT) */
+
+#if defined(__cplusplus)
+
+#if !defined(TX_NODEBUGOBJECT)
+
+// This variation is needed to make ScopedHandles debuggable in Visual Studios watch window
+static const char* __txDbgScoped(const Tx::Utils::ScopedHandle& hObject)
+{
+    return txDebugObject(hObject);
+}
+
+typedef const char* (*TX_DEBUGSCOPEDHANDLE)(const Tx::Utils::ScopedHandle& hObject);
+static TX_DEBUGSCOPEDHANDLE txDebugScopedHandle = __txDbgScoped;
+
+#endif /* !defined(TX_NODEBUGOBJECT) */
+
+
+/*********************************************************************************************************************/
+
+/**
+  txCommitSnapshotAsync. This is a functional-enabled version of txCommitSnapshotAsync defined in EyeXSnapshot.h
+ */
+
+/*********************************************************************************************************************/
+
+
+TX_API_FUNCTION_CPP(CommitSnapshotAsync, (
+	TX_HANDLE hSnapshot,
+	const Tx::AsyncDataCallback& completionHandler
+	));
+
+/*********************************************************************************************************************/
+
+/**
+  txGetStateAsync. This is a functional-enabled version of txGetStateAsync defined in EyeXStates.h
+ */
+
+/*********************************************************************************************************************/
+
+TX_API_FUNCTION_CPP(GetStateAsync,(
+    TX_CONTEXTHANDLE hContext,
+    TX_CONSTSTRING statePath,
+    const Tx::AsyncDataCallback& completionHandler));
+
+/*********************************************************************************************************************/
+
+/**
+  txSetStateAsync. This is a functional-enabled version of txESetStateAsync defined in EyeXStates.h
+ */
+
+/*********************************************************************************************************************/
+
+TX_API_FUNCTION_CPP(SetStateAsync, (
+    TX_HANDLE hStateBag,        
+    const Tx::AsyncDataCallback& completionHandler));
+
+/*********************************************************************************************************************/
+
+/**
+  txRegisterStateChangedHandler. This is a functional-enabled version of txRegisterStateChangedHandler defined in EyeXStates.h
+ */
+
+/*********************************************************************************************************************/
+
+TX_API_FUNCTION_CPP(RegisterStateChangedHandler, (
+    TX_CONTEXTHANDLE hContext,
+    TX_TICKET* pTicket,
+    TX_CONSTSTRING statePath,
+    const Tx::AsyncDataCallback& handler));
+
+/*********************************************************************************************************************/
+
+/**
+  txExecuteCommandAsync. This is a functional-enabled version of txExecuteCommandAsync defined in EyeXCommand.h
+ */
+
+/*********************************************************************************************************************/
+
+TX_API_FUNCTION_CPP(ExecuteCommandAsync, (
+	TX_HANDLE hCommand, 
+	const Tx::AsyncDataCallback& completionHandler
+	));
+
+/*********************************************************************************************************************/
+
+/**
+  txRegisterMessageHandler. This is a functional-enabled version of txRegisterMessageHandler defined in EyeXContext.h
+ */
+
+/*********************************************************************************************************************/
+
+TX_API_FUNCTION_CPP(RegisterMessageHandler,(
+    TX_CONTEXTHANDLE hContext,
+    TX_TICKET* pTicket,
+    TX_MESSAGETYPE messageType,
+    TX_HANDLE hOptions,
+    const Tx::AsyncDataCallback& completionHandler));
+
+/*********************************************************************************************************************/
+
+/**
+  txDisableBuiltinKeys. This is a functional-enabled version of txDisableBuiltinKeys defined in EyeXActions.h
+ */
+
+/*********************************************************************************************************************/
+
+TX_API_FUNCTION_CPP(DisableBuiltinKeys,(
+    TX_CONTEXTHANDLE hContext,
+    TX_CONSTSTRING windowId,
+    const Tx::AsyncDataCallback& completionHandler));
+
+/*********************************************************************************************************************/
+
+/**
+  txEnableBuiltinKeys. This is a functional-enabled version of txEnableBuiltinKeys defined in EyeXActions.h
+ */
+
+/*********************************************************************************************************************/
+
+TX_API_FUNCTION_CPP(EnableBuiltinKeys,(
+    TX_CONTEXTHANDLE hContext,
+    TX_CONSTSTRING windowId,    
+    const Tx::AsyncDataCallback& completionHandler));
+
+/*********************************************************************************************************************/
+
+/**
+  txLaunchConfigurationTool. This is a functional-enabled version of txLaunchConfigurationTool defined in EyeXActions.h
+*/
+
+/*********************************************************************************************************************/
+
+TX_API_FUNCTION_CPP(LaunchConfigurationTool, (
+	TX_CONTEXTHANDLE hContext,
+	TX_CONFIGURATIONTOOL configurationTool,
+	const Tx::AsyncDataCallback& completionHandler));
+
+/*********************************************************************************************************************/
+
+#endif /* defined(__cplusplus) */
+
+#endif /* !defined(__TOBII_TX_UTILS__H__) */
 
 /*********************************************************************************************************************/

@@ -1,10 +1,10 @@
 /*********************************************************************************************************************
  * Copyright 2013-2014 Tobii Technology AB. All rights reserved.
- * InteractionQuery.inl
+ * Query.inl
  *********************************************************************************************************************/
 
-#if !defined(__TOBII_TX_CLIENT_CPPBINDINGS_INTERACTIONQUERY__INL__)
-#define __TOBII_TX_CLIENT_CPPBINDINGS_INTERACTIONQUERY__INL__
+#if !defined(__TOBII_TX_CLIENT_CPPBINDINGS_Query__INL__)
+#define __TOBII_TX_CLIENT_CPPBINDINGS_Query__INL__
 
 /*********************************************************************************************************************/
 
@@ -12,23 +12,23 @@ TX_NAMESPACE_BEGIN
 
 /*********************************************************************************************************************/
 
-inline InteractionQuery::InteractionQuery(const std::shared_ptr<const InteractionContext>& spContext, TX_HANDLE hQuery)
+inline Query::Query(const std::shared_ptr<const Context>& spContext, TX_HANDLE hQuery)
 : InteractionObject(spContext, hQuery)
 {}
 
 /*********************************************************************************************************************/
 
-inline std::shared_ptr<InteractionBounds> InteractionQuery::GetBounds() const
+inline std::shared_ptr<Bounds> Query::GetBounds() const
 {
 	Tx::Utils::ScopedHandle hBounds;
 	TX_VALIDATE(txGetQueryBounds(_hObject, &hBounds));
-	auto spBounds = _spContext->CreateObject<InteractionBounds>(hBounds);
+	auto spBounds = _spContext->CreateObject<Bounds>(hBounds);
 	return spBounds;
 }
 
 /*********************************************************************************************************************/
 
-inline std::vector<std::string> InteractionQuery::GetWindowIds() const
+inline std::vector<std::string> Query::GetWindowIds() const
 {
     TX_SIZE windowIdCount;
     TX_VALIDATE(txGetQueryWindowIdCount(_hObject, &windowIdCount));
@@ -53,6 +53,6 @@ TX_NAMESPACE_END
 
 /*********************************************************************************************************************/
 
-#endif // !defined(__TOBII_TX_CLIENT_CPPBINDINGS_INTERACTIONQUERY__INL__)
+#endif // !defined(__TOBII_TX_CLIENT_CPPBINDINGS_Query__INL__)
 
 /*********************************************************************************************************************/

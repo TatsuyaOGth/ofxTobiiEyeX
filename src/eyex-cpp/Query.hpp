@@ -1,10 +1,10 @@
 /*********************************************************************************************************************
  * Copyright 2013-2014 Tobii Technology AB. All rights reserved.
- * InteractionMask.hpp
+ * Query.hpp
  *********************************************************************************************************************/
 
-#if !defined(__TOBII_TX_CLIENT_CPPBINDINGS_INTERACTIONMASK__HPP__)
-#define __TOBII_TX_CLIENT_CPPBINDINGS_INTERACTIONMASK__HPP__
+#if !defined(__TOBII_TX_CLIENT_CPPBINDINGS_Query__HPP__)
+#define __TOBII_TX_CLIENT_CPPBINDINGS_Query__HPP__
 
 /*********************************************************************************************************************/
 
@@ -12,14 +12,14 @@ TX_NAMESPACE_BEGIN
 	
 /*********************************************************************************************************************/
 
-class InteractionMask :
+class Query :
 	public InteractionObject
 {
-public:
-	InteractionMask(const std::shared_ptr<const InteractionContext>& spContext, TX_HANDLE hInteractionMask);
-	int GetColumnCount() const;
-    int GetRowCount() const;
-    void GetData(std::vector<TX_BYTE>& data) const;
+public:	
+	Query(const std::shared_ptr<const Context>& spContext, TX_HANDLE hQuery);
+	   
+    std::shared_ptr<Bounds> GetBounds() const;
+    std::vector<std::string> GetWindowIds() const;
 };
 
 /*********************************************************************************************************************/
@@ -29,6 +29,6 @@ TX_NAMESPACE_END
 /*********************************************************************************************************************/
 
 
-#endif // !defined(__TOBII_TX_CLIENT_CPPBINDINGS_INTERACTIONMASK__HPP__)
+#endif // !defined(__TOBII_TX_CLIENT_CPPBINDINGS_Query__HPP__)
 
 /*********************************************************************************************************************/

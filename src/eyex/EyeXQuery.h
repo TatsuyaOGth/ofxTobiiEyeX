@@ -25,14 +25,22 @@
  
   @return 
     TX_RESULT_OK: The bounds was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
     TX_RESULT_NOTFOUND: This query does not have any bounds.
  */
-TX_API_FUNCTION(GetQueryBounds,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetQueryBounds(
     TX_CONSTHANDLE hQuery, 
-    TX_OUT_PARAM(TX_HANDLE) phBounds
-    ));
+    TX_HANDLE* phBounds
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetQueryBoundsHook)(
+    TX_CONSTHANDLE hQuery, 
+    TX_HANDLE* phBounds
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -53,13 +61,21 @@ TX_API_FUNCTION(GetQueryBounds,(
  
   @return 
     TX_RESULT_OK: The number of window ids was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
 */
-TX_API_FUNCTION(GetQueryWindowIdCount,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetQueryWindowIdCount(
     TX_CONSTHANDLE hQuery,
-    TX_REF_PARAM(TX_SIZE) pWindowIdsCount
-    ));
+    TX_SIZE* pWindowIdsCount
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetQueryWindowIdCountHook)(
+    TX_CONSTHANDLE hQuery,
+    TX_SIZE* pWindowIdsCount
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -91,17 +107,27 @@ TX_API_FUNCTION(GetQueryWindowIdCount,(
  
   @return 
     TX_RESULT_OK: The window id or the required size of the string was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
     TX_RESULT_INVALIDBUFFERSIZE: The size of windowId is invalid (pWindowIdSize will be set to the required size).
     TX_RESULT_NOTFOUND: The specified index was out of range.
 */
-TX_API_FUNCTION(GetQueryWindowId,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetQueryWindowId(
     TX_CONSTHANDLE hQuery,
     TX_INTEGER windowIdIndex,
     TX_STRING pWindowId,
-    TX_REF_PARAM(TX_SIZE) pWindowIdSize
-    ));
+    TX_SIZE* pWindowIdSize
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetQueryWindowIdHook)(
+    TX_CONSTHANDLE hQuery,
+    TX_INTEGER windowIdIndex,
+    TX_STRING pWindowId,
+    TX_SIZE* pWindowIdSize
+    );
+
 
 /*********************************************************************************************************************/
 

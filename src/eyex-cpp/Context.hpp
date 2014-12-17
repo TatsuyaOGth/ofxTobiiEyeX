@@ -1,10 +1,10 @@
 /*********************************************************************************************************************
  * Copyright 2013-2014 Tobii Technology AB. All rights reserved.
- * InteractionContext.hpp
+ * Context.hpp
  *********************************************************************************************************************/
 
-#if !defined(__TOBII_TX_CLIENT_CPPBINDINGS_INTERACTIONCONTEXT__HPP__)
-#define __TOBII_TX_CLIENT_CPPBINDINGS_INTERACTIONCONTEXT__HPP__
+#if !defined(__TOBII_TX_CLIENT_CPPBINDINGS_Context__HPP__)
+#define __TOBII_TX_CLIENT_CPPBINDINGS_Context__HPP__
 
 /*********************************************************************************************************************/
 
@@ -12,15 +12,17 @@ TX_NAMESPACE_BEGIN
 
 /*********************************************************************************************************************/
 
-class InteractionContext : 
-    public std::enable_shared_from_this<InteractionContext>
+class Context : 
+    public std::enable_shared_from_this<Context>
 {
 public:
-    static std::shared_ptr<InteractionContext> Create(bool trackObjects);
-    InteractionContext(bool trackObjects);
-    virtual ~InteractionContext();
+    static std::shared_ptr<Context> Create(bool trackObjects);
+    Context(bool trackObjects);
+    virtual ~Context();
 
 	TX_CONTEXTHANDLE GetHandle() const;
+	void SetName(const std::string& name);
+	std::string GetName() const;
 
     TX_TICKET RegisterConnectionStateChangedHandler(ConnectionStateChangedHandler fnConnectionStateChangedHandler);
     void UnregisterConnectionStateChangedHandler(TX_TICKET ticket);
@@ -51,9 +53,15 @@ public:
 
     std::shared_ptr<PropertyBag> CreateBag(TX_PROPERTYBAGTYPE bagType = TX_PROPERTYBAGTYPE_OBJECT) const;	
 	std::shared_ptr<StateBag> CreateStateBag(const std::string& statePath) const;
-    std::shared_ptr<InteractionSnapshot> CreateSnapshot() const;    
-    std::shared_ptr<InteractionSnapshot> CreateGlobalInteractorSnapshot(TX_CONSTSTRING globalInteractorId, std::shared_ptr<Interactor>* pspInteractor) const;
-    std::shared_ptr<InteractionCommand> CreateCommand(TX_INTERACTIONCOMMANDTYPE commandType) const;
+    std::shared_ptr<Snapshot> CreateSnapshot() const;    
+    std::shared_ptr<Snapshot> CreateGlobalInteractorSnapshot(TX_CONSTSTRING globalInteractorId, std::shared_ptr<Interactor>* pspInteractor) const;
+    std::shared_ptr<Command> CreateCommand(TX_COMMANDTYPE commandType) const;
+	std::shared_ptr<Command> CreateActionCommand(TX_ACTIONTYPE actionType) const;
+
+    void DisableBuiltinKeys(const std::string& windowId, AsyncDataHandler fnCompletion = nullptr) const;
+    void EnableBuiltinKeys(const std::string& windowId, AsyncDataHandler fnCompletion = nullptr) const;
+
+	void LaunchConfigurationTool(TX_CONFIGURATIONTOOL configurationTool, AsyncDataHandler fnCompletion = nullptr) const;
 
     template <typename TInteractionObject>
     std::shared_ptr<TInteractionObject> CreateObject(TX_HANDLE hObject) const;
@@ -76,6 +84,6 @@ TX_NAMESPACE_END
 	
 /*********************************************************************************************************************/
 
-#endif // !defined(__TOBII_TX_CLIENT_CPPBINDINGS_INTERACTIONCONTEXT__HPP__)
+#endif // !defined(__TOBII_TX_CLIENT_CPPBINDINGS_Context__HPP__)
 
 /*********************************************************************************************************************/

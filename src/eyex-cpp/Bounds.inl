@@ -1,10 +1,10 @@
 /*********************************************************************************************************************
  * Copyright 2013-2014 Tobii Technology AB. All rights reserved.
- * InteractionCommand.inl
+ * Bounds.inl
  *********************************************************************************************************************/
 
-#if !defined(__TOBII_TX_CLIENT_CPPBINDINGS_INTERACTIONCOMMAND__INL__)
-#define __TOBII_TX_CLIENT_CPPBINDINGS_INTERACTIONCOMMAND__INL__
+#if !defined(__TOBII_TX_CLIENT_CPPBINDINGS_Bounds__INL__)
+#define __TOBII_TX_CLIENT_CPPBINDINGS_Bounds__INL__
 
 /*********************************************************************************************************************/
 
@@ -12,36 +12,52 @@ TX_NAMESPACE_BEGIN
 
 /*********************************************************************************************************************/
 
-inline InteractionCommand::InteractionCommand(const std::shared_ptr<const InteractionContext>& spContext, TX_HANDLE hCommand)
-: InteractionObject(spContext, hCommand)
+inline Bounds::Bounds(const std::shared_ptr<const Context>& spContext, TX_HANDLE hBounds)
+: InteractionObject(spContext, hBounds)
 {}
 
 /*********************************************************************************************************************/
 
-inline TX_INTERACTIONCOMMANDTYPE InteractionCommand::GetType() const
+inline TX_BOUNDSTYPE Bounds::GetType() const
 {
-	TX_INTERACTIONCOMMANDTYPE commandType;
-	TX_VALIDATE(txGetCommandType(_hObject, &commandType));
-	return commandType;
+	TX_BOUNDSTYPE boundsType;
+	TX_VALIDATE(txGetBoundsType(_hObject, &boundsType));
+	return boundsType;
 }
 
 /*********************************************************************************************************************/
 
-inline void InteractionCommand::ExecuteAsync(AsyncDataHandler fnHandler)
+
+inline bool Bounds::TryGetRectangularData(TX_REAL* pX, TX_REAL* pY, TX_REAL* pWidth, TX_REAL* pHeight) const
+{
+	return txGetRectangularBoundsData(_hObject, pX, pY, pWidth, pHeight) == TX_RESULT_OK;
+}
+
+/*********************************************************************************************************************/
+
+inline void Bounds::SetRectangularData(TX_REAL x, TX_REAL y, TX_REAL width, TX_REAL height)
 {	
-    auto spThis = shared_from_this();
-	auto fnProxy = [&, spThis, fnHandler](TX_CONSTHANDLE hAsyncData) 
-	{			
-		GetContext()->InvokeAsyncDataHandler(hAsyncData, fnHandler);
-	};
-
-    TX_VALIDATE(Tx::ExecuteCommandAsync(_hObject, fnProxy));
+	txSetRectangularBoundsData(_hObject, x, y, width, height);
 }
 
 /*********************************************************************************************************************/
 
-inline std::shared_ptr<InteractionObject> InteractionCommand::GetData() const
+inline bool Bounds::TryGetRectangularData(TX_RECT* pData) const
 {
+	return TryGetRectangularData(&pData->X, &pData->Y, &pData->Width, &pData->Height);
+}
+
+/*********************************************************************************************************************/
+
+inline void Bounds::SetRectangularData(const TX_RECT& data)
+{
+	SetRectangularData(data.X, data.Y, data.Width, data.Height);
+}
+
+/*********************************************************************************************************************/
+
+inline std::shared_ptr<InteractionObject> Bounds::GetData() const
+{		
 	auto spProperty = GetProperty(TX_LITERAL_DATA);
 
 	std::shared_ptr<InteractionObject> spData;
@@ -52,8 +68,8 @@ inline std::shared_ptr<InteractionObject> InteractionCommand::GetData() const
 }
 
 /*********************************************************************************************************************/
-	
-inline void InteractionCommand::SetData(const std::shared_ptr<InteractionObject>& spData)
+
+inline void Bounds::SetData(const std::shared_ptr<InteractionObject>& spData)
 {
 	auto spProperty = GetProperty(TX_LITERAL_DATA);
 	spProperty->SetValue(spData);
@@ -65,6 +81,6 @@ TX_NAMESPACE_END
 
 /*********************************************************************************************************************/
 
-#endif // !defined(__TOBII_TX_CLIENT_CPPBINDINGS_INTERACTIONCOMMAND__INL__)
+#endif // !defined(__TOBII_TX_CLIENT_CPPBINDINGS_Bounds__INL__)
 
 /*********************************************************************************************************************/

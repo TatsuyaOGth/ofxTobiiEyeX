@@ -23,13 +23,21 @@
  
   @return 
     TX_RESULT_OK: The type of the notification was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
  */
-TX_API_FUNCTION(GetNotificationType,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetNotificationType(
     TX_CONSTHANDLE hNotification,
-    TX_OUT_PARAM(TX_NOTIFICATIONTYPE) pNotificationType
-    ));
+    TX_NOTIFICATIONTYPE* pNotificationType
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetNotificationTypeHook)(
+    TX_CONSTHANDLE hNotification,
+    TX_NOTIFICATIONTYPE* pNotificationType
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -50,14 +58,22 @@ TX_API_FUNCTION(GetNotificationType,(
  
   @return 
     TX_RESULT_OK: The data of the notification was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
     TX_RESULT_NOTFOUND: The notification does not have any data.
  */
-TX_API_FUNCTION(GetNotificationData,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetNotificationData(
     TX_CONSTHANDLE hNotification,
-    TX_OUT_PARAM(TX_HANDLE) phObject
-    ));
+    TX_HANDLE* phObject
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetNotificationDataHook)(
+    TX_CONSTHANDLE hNotification,
+    TX_HANDLE* phObject
+    );
+
 
 /*********************************************************************************************************************/
 

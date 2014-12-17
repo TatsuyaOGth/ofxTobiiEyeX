@@ -9,27 +9,35 @@
 /*********************************************************************************************************************/
 
 /**
-  txGetInteractionBoundsType
+  txGetBoundsType
 
-  Gets the TX_INTERACTIONBOUNDSTYPE of an interaction bounds object.
+  Gets the TX_BOUNDSTYPE of an interaction bounds object.
 
   @param hBounds [in]: 
     A TX_CONSTHANDLE to the bounds.
     Must not be TX_EMPTY_HANDLE.
  
   @param pBoundsType [out]: 
-    A pointer to a TX_INTERACTIONBOUNDSTYPE which will be set to the type of the bounds.
+    A pointer to a TX_BOUNDSTYPE which will be set to the type of the bounds.
     Must not be NULL.
  
   @return 
     TX_RESULT_OK: The type of the bounds was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
  */
-TX_API_FUNCTION(GetInteractionBoundsType,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetBoundsType(
     TX_CONSTHANDLE hBounds,
-    TX_OUT_PARAM(TX_INTERACTIONBOUNDSTYPE) pBoundsType
-    ));
+    TX_BOUNDSTYPE* pBoundsType
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetBoundsTypeHook)(
+    TX_CONSTHANDLE hBounds,
+    TX_BOUNDSTYPE* pBoundsType
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -55,18 +63,29 @@ TX_API_FUNCTION(GetInteractionBoundsType,(
     Height of the rectangle. Must not be negative.
  
   @return 
-    TX_RESULT_OK: The rectanglar data was successfully set.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_OK: The rectangular data was successfully set.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.    
-    TX_RESULT_INVALIDBOUNDSTYPE: The bounds type was invalid, must be TX_INTERACTIONBOUNDSTYPE_RECTANGULAR.
+    TX_RESULT_INVALIDBOUNDSTYPE: The bounds type was invalid, must be TX_BOUNDSTYPE_RECTANGULAR.
  */ 
-TX_API_FUNCTION(SetRectangularBoundsData, (
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txSetRectangularBoundsData(
     TX_HANDLE hBounds,
     TX_REAL x,
     TX_REAL y,
     TX_REAL width,
     TX_REAL height
-    ));
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *SetRectangularBoundsDataHook)(
+    TX_HANDLE hBounds,
+    TX_REAL x,
+    TX_REAL y,
+    TX_REAL width,
+    TX_REAL height
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -84,15 +103,23 @@ TX_API_FUNCTION(SetRectangularBoundsData, (
     Must not be NULL.
  
   @return 
-    TX_RESULT_OK: The rectanglar data was successfully set.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_OK: The rectangular data was successfully set.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.    
-    TX_RESULT_INVALIDBOUNDSTYPE: The bounds type was invalid, must be TX_INTERACTIONBOUNDSTYPE_RECTANGULAR.
+    TX_RESULT_INVALIDBOUNDSTYPE: The bounds type was invalid, must be TX_BOUNDSTYPE_RECTANGULAR.
  */ 
-TX_API_FUNCTION(SetRectangularBoundsDataRect, (
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txSetRectangularBoundsDataRect(
     TX_HANDLE hBounds,
-    TX_IN_PARAM(TX_RECT) pRect
-    ));
+    const TX_RECT* pRect
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *SetRectangularBoundsDataRectHook)(
+    TX_HANDLE hBounds,
+    const TX_RECT* pRect
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -123,17 +150,28 @@ TX_API_FUNCTION(SetRectangularBoundsDataRect, (
  
   @return 
     TX_RESULT_OK: The rectangular data was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.    
-    TX_RESULT_INVALIDBOUNDSTYPE: The bounds type is invalid, must be TX_INTERACTIONBOUNDSTYPE_RECTANGULAR.
+    TX_RESULT_INVALIDBOUNDSTYPE: The bounds type is invalid, must be TX_BOUNDSTYPE_RECTANGULAR.
  */ 
-TX_API_FUNCTION(GetRectangularBoundsData, (
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetRectangularBoundsData(
     TX_CONSTHANDLE hBounds,
-    TX_OUT_PARAM(TX_REAL) pX,
-    TX_OUT_PARAM(TX_REAL) pY,
-    TX_OUT_PARAM(TX_REAL) pWidth,
-    TX_OUT_PARAM(TX_REAL) pHeight
-    ));
+    TX_REAL* pX,
+    TX_REAL* pY,
+    TX_REAL* pWidth,
+    TX_REAL* pHeight
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetRectangularBoundsDataHook)(
+    TX_CONSTHANDLE hBounds,
+    TX_REAL* pX,
+    TX_REAL* pY,
+    TX_REAL* pWidth,
+    TX_REAL* pHeight
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -152,86 +190,100 @@ TX_API_FUNCTION(GetRectangularBoundsData, (
    
   @return 
     TX_RESULT_OK: The rectangular data was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.    
-    TX_RESULT_INVALIDBOUNDSTYPE: The bounds type is invalid, must be TX_INTERACTIONBOUNDSTYPE_RECTANGULAR.
+    TX_RESULT_INVALIDBOUNDSTYPE: The bounds type is invalid, must be TX_BOUNDSTYPE_RECTANGULAR.
  */ 
-TX_API_FUNCTION(GetRectangularBoundsDataRect, (
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetRectangularBoundsDataRect(
     TX_CONSTHANDLE hBounds,
-    TX_OUT_PARAM(TX_RECT) pRect
-    ));
+    TX_RECT* pRect
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetRectangularBoundsDataRectHook)(
+    TX_CONSTHANDLE hBounds,
+    TX_RECT* pRect
+    );
+
 
 /*********************************************************************************************************************/
 
 /**
-  txRectanglesIntersects
+  txBoundsIntersect
 
-  Checks if two rectangles intersects.
+  Checks if a bound intersects with a rectangle.
   
-  @param x1 [in]: 
-    The upper left x coordinate of the first rectangle
-
-  @param y1 [in]: 
-    The upper left y coordinate of the first rectangle
-
-  @param width1 [in]: 
-    The width of the first rectangle
-
-  @param height1 [in]: 
-    The height of the first rectangle
+  @param hBounds [in]:
+    The bounds to check intersection with.
 
   @param x2 [in]: 
-    The upper left x coordinate of the second rectangle
+    The upper left x coordinate of the rectangle
 
   @param y2 [in]: 
-    The upper left y coordinate of the second rectangle
+    The upper left y coordinate of the rectangle
 
   @param width2 [in]: 
-    The width of the second rectangle
+    The width of the rectangle
 
   @param height2 [in]: 
-    The height of the second rectangle
+    The height of the rectangle
 
   @param pIntersects [out]
     The intersection test result. Will be non-zero if rectangles intersects.
 	Must not be NULL.
 */
-TX_API_FUNCTION(RectanglesIntersects, (
-    TX_REAL x1,
-    TX_REAL y1,
-    TX_REAL width1,
-    TX_REAL height1,
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txBoundsIntersect(
+    TX_CONSTHANDLE hBounds,
     TX_REAL x2,
     TX_REAL y2,
     TX_REAL width2,
     TX_REAL height2,
-    TX_OUT_PARAM(TX_BOOL) pIntersects
-    ));
+    TX_BOOL* pIntersects
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *BoundsIntersectHook)(
+    TX_CONSTHANDLE hBounds,
+    TX_REAL x2,
+    TX_REAL y2,
+    TX_REAL width2,
+    TX_REAL height2,
+    TX_BOOL* pIntersects
+    );
+
 
 /*********************************************************************************************************************/
 
-/**
-  txRectanglesIntersectsRect
+/**  
+  txBoundsIntersectRect
 
-  Checks if two rectangles intersects.
+  Checks if a bound intersects with a rectangle.
 
-  @param x1 [in]: 
-    The upper left x coordinate of the first rectangle
-
-  @param pRect1 [in, out]: 
-    The first rectangle
-
-  @param pRect2 [in, out]: 
-    The second rectangle
+  @param hBounds [in]:
+    The bounds to check intersection with.
+  
+  @param pRect2 [in]: 
+    The rectangle to check intersection with.
 
   @param pIntersects [out]
     The intersection test result. Will be non-zero if rectangles intersects.
 */
-TX_API_FUNCTION(RectanglesIntersectsRect, (
-    TX_IN_PARAM(TX_RECT) pRect1,
-    TX_IN_PARAM(TX_RECT) pRect2,
-    TX_OUT_PARAM(TX_BOOL) pIntersects
-    ));
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txBoundsIntersectRect(
+    TX_CONSTHANDLE hBounds,
+    const TX_RECT* pRect2,
+    TX_BOOL* pIntersects
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *BoundsIntersectRectHook)(
+    TX_CONSTHANDLE hBounds,
+    const TX_RECT* pRect2,
+    TX_BOOL* pIntersects
+    );
+
 
 /*********************************************************************************************************************/
 

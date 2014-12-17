@@ -32,14 +32,23 @@
  
   @return 
     TX_RESULT_OK: The property bag was successfully created.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.    
  */
-TX_API_FUNCTION(CreatePropertyBag,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txCreatePropertyBag(
     TX_CONTEXTHANDLE hContext,
-    TX_OUT_PARAM(TX_HANDLE) phBag,
+    TX_HANDLE* phBag,
     TX_PROPERTYBAGTYPE type
-    ));
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *CreatePropertyBagHook)(
+    TX_CONTEXTHANDLE hContext,
+    TX_HANDLE* phBag,
+    TX_PROPERTYBAGTYPE type
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -58,13 +67,21 @@ TX_API_FUNCTION(CreatePropertyBag,(
  
   @return 
     TX_RESULT_OK: The type of the property bag was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
  */
-TX_API_FUNCTION(GetPropertyBagType,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetPropertyBagType(
     TX_CONSTHANDLE hBag,
-    TX_OUT_PARAM(TX_PROPERTYBAGTYPE) pType
-    ));
+    TX_PROPERTYBAGTYPE* pType
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetPropertyBagTypeHook)(
+    TX_CONSTHANDLE hBag,
+    TX_PROPERTYBAGTYPE* pType
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -89,16 +106,25 @@ TX_API_FUNCTION(GetPropertyBagType,(
  
   @return 
     TX_RESULT_OK: The property was successfully created.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
     TX_RESULT_INVALIDPROPERTYNAME: The name of the property was invalid.
     TX_RESULT_DUPLICATEPROPERTY: There already exists a property with the specified name on this object.
  */
-TX_API_FUNCTION(CreateProperty,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txCreateProperty(
     TX_HANDLE hObject,
-    TX_OUT_PARAM(TX_PROPERTYHANDLE) phProperty,
+    TX_PROPERTYHANDLE* phProperty,
     TX_CONSTSTRING propertyName
-    ));
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *CreatePropertyHook)(
+    TX_HANDLE hObject,
+    TX_PROPERTYHANDLE* phProperty,
+    TX_CONSTSTRING propertyName
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -117,15 +143,23 @@ TX_API_FUNCTION(CreateProperty,(
  
   @return 
     TX_RESULT_OK: The property was successfully removed.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
     TX_RESULT_NOTFOUND: A property with the specified name was not found. 
     TX_RESULT_PROPERTYNOTREMOVABLE: The specified property can not be removed.
  */
-TX_API_FUNCTION(RemoveProperty,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txRemoveProperty(
     TX_HANDLE hObject,
     TX_CONSTSTRING propertyName
-    ));
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *RemovePropertyHook)(
+    TX_HANDLE hObject,
+    TX_CONSTSTRING propertyName
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -149,16 +183,25 @@ TX_API_FUNCTION(RemoveProperty,(
  
   @return 
     TX_RESULT_OK: The property was successfully created.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
     TX_RESULT_INVALIDPROPERTYNAME: The name of the property was invalid.
     TX_RESULT_NOTFOUND: A property with the specified name was not found. 
  */
-TX_API_FUNCTION(GetProperty,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetProperty(
     TX_CONSTHANDLE hObject,
-    TX_OUT_PARAM(TX_PROPERTYHANDLE) phProperty,
+    TX_PROPERTYHANDLE* phProperty,
     TX_CONSTSTRING propertyName
-    ));
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetPropertyHook)(
+    TX_CONSTHANDLE hObject,
+    TX_PROPERTYHANDLE* phProperty,
+    TX_CONSTSTRING propertyName
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -182,15 +225,24 @@ TX_API_FUNCTION(GetProperty,(
  
   @return 
     TX_RESULT_OK: The handles or the required buffer size was retrieved successfully.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
     TX_RESULT_INVALIDBUFFERSIZE: The size of the array is invalid. (*pPropertiesSize will be set to the number of behaviors).
  */
-TX_API_FUNCTION(GetProperties,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetProperties(
     TX_CONSTHANDLE hObject,
-    TX_PTR_PARAM(TX_PROPERTYHANDLE) phProperties,
-    TX_REF_PARAM(TX_SIZE) pPropertiesSize
-    ));
+    TX_PROPERTYHANDLE* phProperties,
+    TX_SIZE* pPropertiesSize
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetPropertiesHook)(
+    TX_CONSTHANDLE hObject,
+    TX_PROPERTYHANDLE* phProperties,
+    TX_SIZE* pPropertiesSize
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -215,15 +267,24 @@ TX_API_FUNCTION(GetProperties,(
  
   @return 
     TX_RESULT_OK: The property name or the required size of the string was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
     TX_RESULT_INVALIDBUFFERSIZE: The size of pName is invalid (pNameSize will be set to the required size).
  */
-TX_API_FUNCTION(GetPropertyName,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetPropertyName(
     TX_CONSTPROPERTYHANDLE hProperty,    
     TX_STRING pName,
-    TX_REF_PARAM(TX_SIZE) pNameSize
-    ));
+    TX_SIZE* pNameSize
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetPropertyNameHook)(
+    TX_CONSTPROPERTYHANDLE hProperty,    
+    TX_STRING pName,
+    TX_SIZE* pNameSize
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -242,13 +303,21 @@ TX_API_FUNCTION(GetPropertyName,(
  
   @return 
     TX_RESULT_OK: The type of the value was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
  */
-TX_API_FUNCTION(GetPropertyValueType,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetPropertyValueType(
     TX_CONSTPROPERTYHANDLE hProperty,    
-    TX_OUT_PARAM(TX_PROPERTYVALUETYPE) pPropertyType
-    ));
+    TX_PROPERTYVALUETYPE* pPropertyType
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetPropertyValueTypeHook)(
+    TX_CONSTPROPERTYHANDLE hProperty,    
+    TX_PROPERTYVALUETYPE* pPropertyType
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -267,13 +336,21 @@ TX_API_FUNCTION(GetPropertyValueType,(
  
   @return 
     TX_RESULT_OK: The flags were successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
  */
-TX_API_FUNCTION(GetPropertyFlags,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetPropertyFlags(
     TX_CONSTPROPERTYHANDLE hProperty,    
-    TX_OUT_PARAM(TX_PROPERTYFLAGS) pFlags
-    ));
+    TX_PROPERTYFLAGS* pFlags
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetPropertyFlagsHook)(
+    TX_CONSTPROPERTYHANDLE hProperty,    
+    TX_PROPERTYFLAGS* pFlags
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -289,12 +366,19 @@ TX_API_FUNCTION(GetPropertyFlags,(
  
   @return 
     TX_RESULT_OK: The property was successfully cleared.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
  */
-TX_API_FUNCTION(ClearPropertyValue,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txClearPropertyValue(
     TX_PROPERTYHANDLE hProperty
-    ));
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *ClearPropertyValueHook)(
+    TX_PROPERTYHANDLE hProperty
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -314,13 +398,21 @@ TX_API_FUNCTION(ClearPropertyValue,(
  
   @return 
     TX_RESULT_OK: The property value was successfully set.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
  */
-TX_API_FUNCTION(SetPropertyValueAsInteger,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txSetPropertyValueAsInteger(
     TX_PROPERTYHANDLE hProperty,    
     TX_INTEGER intValue
-    ));
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *SetPropertyValueAsIntegerHook)(
+    TX_PROPERTYHANDLE hProperty,    
+    TX_INTEGER intValue
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -340,13 +432,21 @@ TX_API_FUNCTION(SetPropertyValueAsInteger,(
  
   @return 
     TX_RESULT_OK: The property value was successfully set.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
  */
-TX_API_FUNCTION(SetPropertyValueAsReal,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txSetPropertyValueAsReal(
     TX_PROPERTYHANDLE hProperty,    
     TX_REAL realValue
-    ));
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *SetPropertyValueAsRealHook)(
+    TX_PROPERTYHANDLE hProperty,    
+    TX_REAL realValue
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -367,13 +467,21 @@ TX_API_FUNCTION(SetPropertyValueAsReal,(
  
   @return 
     TX_RESULT_OK: The property value was successfully set.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
  */
-TX_API_FUNCTION(SetPropertyValueAsString,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txSetPropertyValueAsString(
     TX_PROPERTYHANDLE hProperty,    
     TX_CONSTSTRING stringValue
-    ));
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *SetPropertyValueAsStringHook)(
+    TX_PROPERTYHANDLE hProperty,    
+    TX_CONSTSTRING stringValue
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -394,13 +502,21 @@ TX_API_FUNCTION(SetPropertyValueAsString,(
  
   @return 
     TX_RESULT_OK: The property value was successfully set.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
  */
-TX_API_FUNCTION(SetPropertyValueAsObject,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txSetPropertyValueAsObject(
     TX_PROPERTYHANDLE hProperty,    
     TX_HANDLE hObject
-    ));
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *SetPropertyValueAsObjectHook)(
+    TX_PROPERTYHANDLE hProperty,    
+    TX_HANDLE hObject
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -424,14 +540,23 @@ TX_API_FUNCTION(SetPropertyValueAsObject,(
  
   @return 
     TX_RESULT_OK: The property value was successfully set.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
  */
-TX_API_FUNCTION(SetPropertyValueAsBlob,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txSetPropertyValueAsBlob(
     TX_PROPERTYHANDLE hProperty,    
-    TX_CONSTPTR_PARAM(TX_BYTE) pBuffer,
+    const TX_BYTE* pBuffer,
     TX_SIZE blobSize
-    ));
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *SetPropertyValueAsBlobHook)(
+    TX_PROPERTYHANDLE hProperty,    
+    const TX_BYTE* pBuffer,
+    TX_SIZE blobSize
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -450,14 +575,22 @@ TX_API_FUNCTION(SetPropertyValueAsBlob,(
  
   @return 
     TX_RESULT_OK: The property value was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
     TX_RESULT_INVALIDPROPERTYTYPE: The value type was not TX_PROPERTYVALUETYPE_INTEGER.
  */
-TX_API_FUNCTION(GetPropertyValueAsInteger,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetPropertyValueAsInteger(
     TX_CONSTPROPERTYHANDLE hProperty,    
-    TX_OUT_PARAM(TX_INTEGER) pIntValue
-    ));
+    TX_INTEGER* pIntValue
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetPropertyValueAsIntegerHook)(
+    TX_CONSTPROPERTYHANDLE hProperty,    
+    TX_INTEGER* pIntValue
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -476,14 +609,22 @@ TX_API_FUNCTION(GetPropertyValueAsInteger,(
  
   @return 
     TX_RESULT_OK: The property value was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
     TX_RESULT_INVALIDPROPERTYTYPE: The value type was not TX_PROPERTYVALUETYPE_REAL.
  */
-TX_API_FUNCTION(GetPropertyValueAsReal,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetPropertyValueAsReal(
     TX_CONSTPROPERTYHANDLE hProperty,    
-    TX_OUT_PARAM(TX_REAL) pRealValue
-    ));
+    TX_REAL* pRealValue
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetPropertyValueAsRealHook)(
+    TX_CONSTPROPERTYHANDLE hProperty,    
+    TX_REAL* pRealValue
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -509,16 +650,25 @@ TX_API_FUNCTION(GetPropertyValueAsReal,(
  
   @return 
     TX_RESULT_OK: The property value or the required size of the string was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
     TX_RESULT_INVALIDBUFFERSIZE: The size of pStringValue is invalid (*pStringSize will be set to the required size). 
     TX_RESULT_INVALIDPROPERTYTYPE: The value type was not TX_PROPERTYVALUETYPE_STRING.
  */
-TX_API_FUNCTION(GetPropertyValueAsString,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetPropertyValueAsString(
     TX_CONSTPROPERTYHANDLE hProperty,    
     TX_STRING pStringValue,
-    TX_REF_PARAM(TX_SIZE) pStringSize
-    ));
+    TX_SIZE* pStringSize
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetPropertyValueAsStringHook)(
+    TX_CONSTPROPERTYHANDLE hProperty,    
+    TX_STRING pStringValue,
+    TX_SIZE* pStringSize
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -540,14 +690,22 @@ TX_API_FUNCTION(GetPropertyValueAsString,(
  
   @return 
     TX_RESULT_OK: The property value was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
     TX_RESULT_INVALIDPROPERTYTYPE: The value type was not TX_PROPERTYVALUETYPE_OBJECT.
  */
-TX_API_FUNCTION(GetPropertyValueAsObject,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetPropertyValueAsObject(
     TX_CONSTPROPERTYHANDLE hProperty,    
-    TX_OUT_PARAM(TX_HANDLE) phObject
-    ));
+    TX_HANDLE* phObject
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetPropertyValueAsObjectHook)(
+    TX_CONSTPROPERTYHANDLE hProperty,    
+    TX_HANDLE* phObject
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -573,16 +731,25 @@ TX_API_FUNCTION(GetPropertyValueAsObject,(
  
   @return 
     TX_RESULT_OK: The property value or the required size of the buffer was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
     TX_RESULT_INVALIDBUFFERSIZE: The size of pBuffer is invalid (*pBlobSize will be set to the required size). 
     TX_RESULT_INVALIDPROPERTYTYPE: The value type was not TX_PROPERTYVALUETYPE_BLOB.
  */
-TX_API_FUNCTION(GetPropertyValueAsBlob,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetPropertyValueAsBlob(
     TX_CONSTPROPERTYHANDLE hProperty,    
-    TX_PTR_PARAM(TX_BYTE) pBuffer,
-    TX_REF_PARAM(TX_SIZE) pBlobSize
-    ));
+    TX_BYTE* pBuffer,
+    TX_SIZE* pBlobSize
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetPropertyValueAsBlobHook)(
+    TX_CONSTPROPERTYHANDLE hProperty,    
+    TX_BYTE* pBuffer,
+    TX_SIZE* pBlobSize
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -601,13 +768,21 @@ TX_API_FUNCTION(GetPropertyValueAsBlob,(
   
   @return 
     TX_RESULT_OK: The properties were successfully copied.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function. 
  */
-TX_API_FUNCTION(CopyProperties,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txCopyProperties(
     TX_CONSTHANDLE hSourceObject,    
     TX_HANDLE hTargetObject
-    ));
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *CopyPropertiesHook)(
+    TX_CONSTHANDLE hSourceObject,    
+    TX_HANDLE hTargetObject
+    );
+
 
 /*********************************************************************************************************************/
 

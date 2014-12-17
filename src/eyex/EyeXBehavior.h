@@ -11,25 +11,33 @@
 /**
   txGetBehaviorType
 
-  Gets the TX_INTERACTIONBEHAVIORTYPE of an interaction behavior.
+  Gets the TX_BEHAVIORTYPE of an interaction behavior.
  
   @param hBehavior [in]: 
     A TX_CONSTHANDLE to the behavior.
     Must not be TX_EMPTY_HANDLE.
 
   @param pBehaviorType [out]: 
-    A pointer to a TX_INTERACTIONBEHAVIORTYPE which will be set to the type of the behavior
+    A pointer to a TX_BEHAVIORTYPE which will be set to the type of the behavior
     Must not be NULL.
  
   @return 
-    TX_RESULT_OK: The type of the bounds was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_OK: The type of the behavior was successfully retrieved.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
  */
-TX_API_FUNCTION(GetBehaviorType,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetBehaviorType(
     TX_CONSTHANDLE hBehavior,
-    TX_OUT_PARAM(TX_INTERACTIONBEHAVIORTYPE) pBehaviorType
-    ));
+    TX_BEHAVIORTYPE* pBehaviorType
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetBehaviorTypeHook)(
+    TX_CONSTHANDLE hBehavior,
+    TX_BEHAVIORTYPE* pBehaviorType
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -48,13 +56,21 @@ TX_API_FUNCTION(GetBehaviorType,(
 
   @return 
     TX_RESULT_OK: The option was successfully set.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.    
  */ 
-TX_API_FUNCTION(SetActivatableBehaviorParams, (
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txSetActivatableBehaviorParams(
     TX_HANDLE hBehavior,
-    TX_IN_PARAM(TX_ACTIVATABLEPARAMS) pParams
-    ));
+    const TX_ACTIVATABLEPARAMS* pParams
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *SetActivatableBehaviorParamsHook)(
+    TX_HANDLE hBehavior,
+    const TX_ACTIVATABLEPARAMS* pParams
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -73,14 +89,22 @@ TX_API_FUNCTION(SetActivatableBehaviorParams, (
  
   @return 
     TX_RESULT_OK: The parameters was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
-    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior was not of type TX_INTERACTIONBEHAVIORTYPE_ACTIVATABLE.
+    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior was not of type TX_BEHAVIORTYPE_ACTIVATABLE.
  */ 
-TX_API_FUNCTION(GetActivatableBehaviorParams, (
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetActivatableBehaviorParams(
     TX_CONSTHANDLE hBehavior,
-    TX_OUT_PARAM(TX_ACTIVATABLEPARAMS) pParams
-    ));
+    TX_ACTIVATABLEPARAMS* pParams
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetActivatableBehaviorParamsHook)(
+    TX_CONSTHANDLE hBehavior,
+    TX_ACTIVATABLEPARAMS* pParams
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -99,14 +123,22 @@ TX_API_FUNCTION(GetActivatableBehaviorParams, (
  
   @return 
     TX_RESULT_OK: The event type was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
-    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior was not of type TX_INTERACTIONBEHAVIORTYPE_ACTIVATABLE.
+    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior was not of type TX_BEHAVIORTYPE_ACTIVATABLE.
  */
-TX_API_FUNCTION(GetActivatableEventType, (
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetActivatableEventType(
     TX_CONSTHANDLE hBehavior,
-    TX_OUT_PARAM(TX_ACTIVATABLEEVENTTYPE) pEventType
-    ));
+    TX_ACTIVATABLEEVENTTYPE* pEventType
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetActivatableEventTypeHook)(
+    TX_CONSTHANDLE hBehavior,
+    TX_ACTIVATABLEEVENTTYPE* pEventType
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -125,15 +157,23 @@ TX_API_FUNCTION(GetActivatableEventType, (
  
   @return 
     TX_RESULT_OK: The parameters was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
-    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior was not of type TX_INTERACTIONBEHAVIORTYPE_ACTIVATABLE.
+    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior was not of type TX_BEHAVIORTYPE_ACTIVATABLE.
     TX_RESULT_NOTFOUND: The options could not be found due to invalid event type.
  */
-TX_API_FUNCTION(GetActivationFocusChangedEventParams, (
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetActivationFocusChangedEventParams(
     TX_CONSTHANDLE hBehavior,
-    TX_OUT_PARAM(TX_ACTIVATIONFOCUSCHANGEDEVENTPARAMS) pEventParams
-    ));
+    TX_ACTIVATIONFOCUSCHANGEDEVENTPARAMS* pEventParams
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetActivationFocusChangedEventParamsHook)(
+    TX_CONSTHANDLE hBehavior,
+    TX_ACTIVATIONFOCUSCHANGEDEVENTPARAMS* pEventParams
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -152,14 +192,22 @@ TX_API_FUNCTION(GetActivationFocusChangedEventParams, (
 
   @return 
     TX_RESULT_OK: The parameters was successfully set.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
-    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior was not of type TX_INTERACTIONBEHAVIORTYPE_PANNABLE.
+    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior was not of type TX_BEHAVIORTYPE_PANNABLE.
  */ 
-TX_API_FUNCTION(SetPannableBehaviorParams, (
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txSetPannableBehaviorParams(
     TX_HANDLE hBehavior,
-    TX_IN_PARAM(TX_PANNABLEPARAMS) pParams
-    ));
+    const TX_PANNABLEPARAMS* pParams
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *SetPannableBehaviorParamsHook)(
+    TX_HANDLE hBehavior,
+    const TX_PANNABLEPARAMS* pParams
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -178,14 +226,22 @@ TX_API_FUNCTION(SetPannableBehaviorParams, (
  
   @return 
     TX_RESULT_OK: The parameters was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
-    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior was not of type TX_INTERACTIONBEHAVIORTYPE_PANNABLE.
+    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior was not of type TX_BEHAVIORTYPE_PANNABLE.
  */ 
-TX_API_FUNCTION(GetPannableBehaviorParams, (
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetPannableBehaviorParams(
     TX_CONSTHANDLE hBehavior,
-    TX_OUT_PARAM(TX_PANNABLEPARAMS) pParams
-    ));
+    TX_PANNABLEPARAMS* pParams
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetPannableBehaviorParamsHook)(
+    TX_CONSTHANDLE hBehavior,
+    TX_PANNABLEPARAMS* pParams
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -204,14 +260,22 @@ TX_API_FUNCTION(GetPannableBehaviorParams, (
  
   @return 
     TX_RESULT_OK: The event type was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
-    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior was not of type TX_INTERACTIONBEHAVIORTYPE_PANNABLE.
+    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior was not of type TX_BEHAVIORTYPE_PANNABLE.
  */ 
-TX_API_FUNCTION(GetPannableEventType, (
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetPannableEventType(
     TX_CONSTHANDLE hBehavior,
-    TX_OUT_PARAM(TX_PANNABLEEVENTTYPE) pEventType
-    ));
+    TX_PANNABLEEVENTTYPE* pEventType
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetPannableEventTypeHook)(
+    TX_CONSTHANDLE hBehavior,
+    TX_PANNABLEEVENTTYPE* pEventType
+    );
+
 
 
 /*********************************************************************************************************************/
@@ -231,14 +295,22 @@ TX_API_FUNCTION(GetPannableEventType, (
  
   @return 
     TX_RESULT_OK: The event parameters was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
-    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior was not of type TX_INTERACTIONBEHAVIORTYPE_PANNABLE.
+    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior was not of type TX_BEHAVIORTYPE_PANNABLE.
  */ 
-TX_API_FUNCTION(GetPannablePanEventParams, (
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetPannablePanEventParams(
     TX_CONSTHANDLE hBehavior,
-    TX_OUT_PARAM(TX_PANNABLEPANEVENTPARAMS) pEventParams
-    ));
+    TX_PANNABLEPANEVENTPARAMS* pEventParams
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetPannablePanEventParamsHook)(
+    TX_CONSTHANDLE hBehavior,
+    TX_PANNABLEPANEVENTPARAMS* pEventParams
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -257,14 +329,22 @@ TX_API_FUNCTION(GetPannablePanEventParams, (
  
   @return 
     TX_RESULT_OK: The event parameters was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
-    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior was not of type TX_INTERACTIONBEHAVIORTYPE_PANNABLE.
+    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior was not of type TX_BEHAVIORTYPE_PANNABLE.
  */ 
-TX_API_FUNCTION(GetPannableStepEventParams, (
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetPannableStepEventParams(
     TX_CONSTHANDLE hBehavior,
-    TX_OUT_PARAM(TX_PANNABLESTEPEVENTPARAMS) pEventParams
-    ));
+    TX_PANNABLESTEPEVENTPARAMS* pEventParams
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetPannableStepEventParamsHook)(
+    TX_CONSTHANDLE hBehavior,
+    TX_PANNABLESTEPEVENTPARAMS* pEventParams
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -283,14 +363,22 @@ TX_API_FUNCTION(GetPannableStepEventParams, (
  
   @return 
     TX_RESULT_OK: The event parameters was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
-    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior was not of type TX_INTERACTIONBEHAVIORTYPE_PANNABLE.
+    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior was not of type TX_BEHAVIORTYPE_PANNABLE.
  */ 
-TX_API_FUNCTION(GetPannableHandsFreeEventParams, (
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetPannableHandsFreeEventParams(
     TX_CONSTHANDLE hBehavior,
-    TX_OUT_PARAM(TX_PANNABLEHANDSFREEEVENTPARAMS) pEventParams
-    ));
+    TX_PANNABLEHANDSFREEEVENTPARAMS* pEventParams
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetPannableHandsFreeEventParamsHook)(
+    TX_CONSTHANDLE hBehavior,
+    TX_PANNABLEHANDSFREEEVENTPARAMS* pEventParams
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -309,14 +397,22 @@ TX_API_FUNCTION(GetPannableHandsFreeEventParams, (
  
   @return 
     TX_RESULT_OK: The parameters was successfully set.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
-    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior was not of type TX_INTERACTIONBEHAVIORTYPE_GAZEPOINTDATA.
+    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior was not of type TX_BEHAVIORTYPE_GAZEPOINTDATA.
  */ 
-TX_API_FUNCTION(SetGazePointDataBehaviorParams, (
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txSetGazePointDataBehaviorParams(
     TX_HANDLE hBehavior,
-    TX_IN_PARAM(TX_GAZEPOINTDATAPARAMS) pParams
-    ));
+    const TX_GAZEPOINTDATAPARAMS* pParams
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *SetGazePointDataBehaviorParamsHook)(
+    TX_HANDLE hBehavior,
+    const TX_GAZEPOINTDATAPARAMS* pParams
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -335,14 +431,22 @@ TX_API_FUNCTION(SetGazePointDataBehaviorParams, (
  
   @return 
     TX_RESULT_OK: The parameters was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
-    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior was not of type TX_INTERACTIONBEHAVIORTYPE_GAZEPOINTDATA.
+    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior was not of type TX_BEHAVIORTYPE_GAZEPOINTDATA.
  */ 
-TX_API_FUNCTION(GetGazePointDataBehaviorParams, (
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetGazePointDataBehaviorParams(
     TX_CONSTHANDLE hBehavior,
-    TX_OUT_PARAM(TX_GAZEPOINTDATAPARAMS) pParams
-    ));
+    TX_GAZEPOINTDATAPARAMS* pParams
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetGazePointDataBehaviorParamsHook)(
+    TX_CONSTHANDLE hBehavior,
+    TX_GAZEPOINTDATAPARAMS* pParams
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -361,14 +465,22 @@ TX_API_FUNCTION(GetGazePointDataBehaviorParams, (
  
   @return 
     TX_RESULT_OK: The event parameters was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
-    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior is not of type TX_INTERACTIONBEHAVIORTYPE_GAZEPOINTDATA.
+    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior is not of type TX_BEHAVIORTYPE_GAZEPOINTDATA.
  */ 
-TX_API_FUNCTION(GetGazePointDataEventParams, (
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetGazePointDataEventParams(
     TX_CONSTHANDLE hBehavior,
-    TX_OUT_PARAM(TX_GAZEPOINTDATAEVENTPARAMS) pEventParams
-    ));
+    TX_GAZEPOINTDATAEVENTPARAMS* pEventParams
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetGazePointDataEventParamsHook)(
+    TX_CONSTHANDLE hBehavior,
+    TX_GAZEPOINTDATAEVENTPARAMS* pEventParams
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -387,14 +499,22 @@ TX_API_FUNCTION(GetGazePointDataEventParams, (
  
   @return 
     TX_RESULT_OK: The parameters was successfully set.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
-    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior was not of type TX_INTERACTIONBEHAVIORTYPE_GAZEAWARE.
+    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior was not of type TX_BEHAVIORTYPE_GAZEAWARE.
  */ 
-TX_API_FUNCTION(SetGazeAwareBehaviorParams, (
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txSetGazeAwareBehaviorParams(
     TX_HANDLE hBehavior,
-    TX_IN_PARAM(TX_GAZEAWAREPARAMS) pParams
-    ));
+    const TX_GAZEAWAREPARAMS* pParams
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *SetGazeAwareBehaviorParamsHook)(
+    TX_HANDLE hBehavior,
+    const TX_GAZEAWAREPARAMS* pParams
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -413,14 +533,22 @@ TX_API_FUNCTION(SetGazeAwareBehaviorParams, (
  
   @return 
     TX_RESULT_OK: The parameters was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
-    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior was not of type TX_INTERACTIONBEHAVIORTYPE_GAZEAWARE.
+    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior was not of type TX_BEHAVIORTYPE_GAZEAWARE.
  */ 
-TX_API_FUNCTION(GetGazeAwareBehaviorParams, (
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetGazeAwareBehaviorParams(
     TX_CONSTHANDLE hBehavior,
-    TX_OUT_PARAM(TX_GAZEAWAREPARAMS) pParams
-    ));
+    TX_GAZEAWAREPARAMS* pParams
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetGazeAwareBehaviorParamsHook)(
+    TX_CONSTHANDLE hBehavior,
+    TX_GAZEAWAREPARAMS* pParams
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -439,14 +567,22 @@ TX_API_FUNCTION(GetGazeAwareBehaviorParams, (
  
   @return 
     TX_RESULT_OK: The parameters was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
-    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior was not of type TX_INTERACTIONBEHAVIORTYPE_GAZEAWARE.
+    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior was not of type TX_BEHAVIORTYPE_GAZEAWARE.
  */
-TX_API_FUNCTION(GetGazeAwareBehaviorEventParams, (
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetGazeAwareBehaviorEventParams(
     TX_CONSTHANDLE hBehavior,
-    TX_OUT_PARAM(TX_GAZEAWAREEVENTPARAMS) pEventParams
-    ));
+    TX_GAZEAWAREEVENTPARAMS* pEventParams
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetGazeAwareBehaviorEventParamsHook)(
+    TX_CONSTHANDLE hBehavior,
+    TX_GAZEAWAREEVENTPARAMS* pEventParams
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -465,14 +601,22 @@ TX_API_FUNCTION(GetGazeAwareBehaviorEventParams, (
  
   @return 
     TX_RESULT_OK: The parameters was successfully set.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
-    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior is not of type TX_INTERACTIONBEHAVIOR_FIXATIONDATA.
+    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior is not of type TX_Behavior_FIXATIONDATA.
  */ 
-TX_API_FUNCTION(SetFixationDataBehaviorParams, (
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txSetFixationDataBehaviorParams(
     TX_HANDLE hBehavior,
-    TX_IN_PARAM(TX_FIXATIONDATAPARAMS) pParams
-    ));
+    const TX_FIXATIONDATAPARAMS* pParams
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *SetFixationDataBehaviorParamsHook)(
+    TX_HANDLE hBehavior,
+    const TX_FIXATIONDATAPARAMS* pParams
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -491,14 +635,22 @@ TX_API_FUNCTION(SetFixationDataBehaviorParams, (
  
   @return 
     TX_RESULT_OK: The parameters was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
-    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior is not of type TX_INTERACTIONBEHAVIOR_FIXATIONDATA.
+    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior is not of type TX_Behavior_FIXATIONDATA.
  */ 
-TX_API_FUNCTION(GetFixationDataBehaviorParams, (
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetFixationDataBehaviorParams(
     TX_CONSTHANDLE hBehavior,
-    TX_OUT_PARAM(TX_FIXATIONDATAPARAMS) pParams
-    ));
+    TX_FIXATIONDATAPARAMS* pParams
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetFixationDataBehaviorParamsHook)(
+    TX_CONSTHANDLE hBehavior,
+    TX_FIXATIONDATAPARAMS* pParams
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -517,14 +669,22 @@ TX_API_FUNCTION(GetFixationDataBehaviorParams, (
  
   @return 
     TX_RESULT_OK: The event parameters was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
-    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior is not of type TX_INTERACTIONBEHAVIORTYPE_FIXATIONDATA.
+    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior is not of type TX_BEHAVIORTYPE_FIXATIONDATA.
  */ 
-TX_API_FUNCTION(GetFixationDataEventParams, (
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetFixationDataEventParams(
     TX_CONSTHANDLE hBehavior,
-    TX_OUT_PARAM(TX_FIXATIONDATAEVENTPARAMS) pEventParams
-    ));
+    TX_FIXATIONDATAEVENTPARAMS* pEventParams
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetFixationDataEventParamsHook)(
+    TX_CONSTHANDLE hBehavior,
+    TX_FIXATIONDATAEVENTPARAMS* pEventParams
+    );
+
 
 /*********************************************************************************************************************/
 
@@ -543,14 +703,59 @@ TX_API_FUNCTION(GetFixationDataEventParams, (
  
   @return 
     TX_RESULT_OK: The event parameters was successfully retrieved.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
-    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior is not of type TX_INTERACTIONBEHAVIORTYPE_EYEPOSITIONDATA.
+    TX_RESULT_INVALIDBEHAVIORTYPE: The behavior is not of type TX_BEHAVIORTYPE_EYEPOSITIONDATA.
  */ 
-TX_API_FUNCTION(GetEyePositionDataEventParams, (
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetEyePositionDataEventParams(
     TX_CONSTHANDLE hBehavior,
-    TX_OUT_PARAM(TX_EYEPOSITIONDATAEVENTPARAMS) pEventParams
-    ));
+    TX_EYEPOSITIONDATAEVENTPARAMS* pEventParams
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetEyePositionDataEventParamsHook)(
+    TX_CONSTHANDLE hBehavior,
+    TX_EYEPOSITIONDATAEVENTPARAMS* pEventParams
+    );
+
+
+/*********************************************************************************************************************/
+
+/**
+  txGetBehaviorEventTimestamp
+
+  Gets the timestamp of when the behavior was created, in milliseconds. 
+  Not to be confused with data timestamps, which deals with when 
+  the data was captured by the tracker (e.g. TX_GAZEPOINTDATAEVENTPARAMS - Timestamp)
+
+  @param hBehavior [in]: 
+    A TX_CONSTHANDLE to the behavior from which the timestamp will be retrieved.
+    Must not be TX_EMPTY_HANDLE.
+
+  @param pTimestamp [out]: 
+    A pointer to a TX_REAL which will be set to the behavior event Timestamp.
+	Must not be NULL.
+
+  @return 
+    TX_RESULT_OK: The timestamp was successfully retrieved.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
+    TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
+    TX_RESULT_NOTFOUND: The timestamp cannot be found for the supplied behavior.
+ */
+  TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetBehaviorEventTimestamp(
+      TX_CONSTHANDLE hBehavior, 
+      TX_REAL* pTimestamp
+      );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *GetBehaviorEventTimestampHook)(
+      TX_CONSTHANDLE hBehavior, 
+      TX_REAL* pTimestamp
+      );
+
+
 
 /*********************************************************************************************************************/
 

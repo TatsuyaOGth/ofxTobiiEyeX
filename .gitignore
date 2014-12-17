@@ -19,3 +19,12 @@
 *.exe
 *.out
 *.app
+
+#VC
+*/obj/*
+*.exp
+*.ilk
+*.pdb
+*.sdf
+*.suo
+*.opensdf

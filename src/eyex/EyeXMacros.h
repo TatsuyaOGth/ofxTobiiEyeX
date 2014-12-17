@@ -147,7 +147,7 @@
  * This macro generates a single message token.
  */
 #if !defined(TX_LITERALS_VALUE)
-#define TX_LITERALS_VALUE(name, clr, str) static const char* name = str;
+#define TX_LITERALS_VALUE(name, clrName, str) static const char* name = str; 
 #endif /* !defined(TX_LITERALS_VALUE) */
 
 #if !defined(TX_CONSTANT_INTEGER_VALUE)
@@ -196,6 +196,10 @@
 #define TX_CONSTPTR_PARAM(param) const param*
 #endif /* !defined(TX_CONSTPTR_PARAM) */
 
+#if !defined(TX_CALLBACK_PARAM) 
+#define TX_CALLBACK_PARAM(param) param
+#endif /* !defined(TX_CALLBACK_PARAM) */
+
 /*********************************************************************************************************************/
 
 #if !defined(TX_DEFINE_CALLABLE)
@@ -213,6 +217,15 @@
 	} name;
 #endif /* !defined(TX_STRUCT_END) */
 
+
+/*********************************************************************************************************************/
+
+/**
+  Macro that generates a type of the specified type.
+ */
+#if !defined(TX_DEFINE_TYPE)
+#define TX_DEFINE_TYPE(type, name) typedef type name;
+#endif /* !defined(TX_TRANSLATE_TYPE) */
 
 /*********************************************************************************************************************/
 

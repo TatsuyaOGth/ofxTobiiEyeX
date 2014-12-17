@@ -1,10 +1,10 @@
 /*********************************************************************************************************************
  * Copyright 2013-2014 Tobii Technology AB. All rights reserved.
- * InteractionBehavior.hpp
+ * Behavior.hpp
  *********************************************************************************************************************/
 
-#if !defined(__TOBII_TX_CLIENT_CPPBINDINGS_INTERACTIONBEHAVIOR__HPP__)
-#define __TOBII_TX_CLIENT_CPPBINDINGS_INTERACTIONBEHAVIOR__HPP__
+#if !defined(__TOBII_TX_CLIENT_CPPBINDINGS_Behavior__HPP__)
+#define __TOBII_TX_CLIENT_CPPBINDINGS_Behavior__HPP__
 
 /*********************************************************************************************************************/
 
@@ -12,13 +12,13 @@ TX_NAMESPACE_BEGIN
 
 /*********************************************************************************************************************/
 
-class InteractionBehavior :
+class Behavior :
 	public InteractionObject
 {
 public:
-    InteractionBehavior(const std::shared_ptr<const InteractionContext>& spContext, TX_HANDLE hBehavior);
+    Behavior(const std::shared_ptr<const Context>& spContext, TX_HANDLE hBehavior);
 
-    TX_INTERACTIONBEHAVIORTYPE GetType() const;
+    TX_BEHAVIORTYPE GetType() const;
 	
 public:
     void SetData(const std::shared_ptr<InteractionObject>& spData);
@@ -59,6 +59,6 @@ TX_NAMESPACE_END
 /*********************************************************************************************************************/
 
 
-#endif // !defined(__TOBII_TX_CLIENT_CPPBINDINGS_INTERACTIONBEHAVIOR__HPP__)
+#endif // !defined(__TOBII_TX_CLIENT_CPPBINDINGS_Behavior__HPP__)
 
 /*********************************************************************************************************************/

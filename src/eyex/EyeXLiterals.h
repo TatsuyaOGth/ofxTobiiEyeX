@@ -10,163 +10,166 @@
  * Literals
  *********************************************************************************************************************/
 
-TX_CONSTANTS_BEGIN(Literals)
+
 
     /**
     *   Message Literals
     */
-    TX_LITERALS_VALUE(TX_LITERAL_HEADER,          Header,         "Header");
-    TX_LITERALS_VALUE(TX_LITERAL_BODY,            Body,           "Body");
-    TX_LITERALS_VALUE(TX_LITERAL_ID,              Id,             "Id");
-    TX_LITERALS_VALUE(TX_LITERAL_PROCESSID,       ProcessId,      "ProcessId");
+    static const char* TX_LITERAL_HEADER = "Header";
+    static const char* TX_LITERAL_BODY = "Body";
+    static const char* TX_LITERAL_ID = "Id";
+    static const char* TX_LITERAL_PROCESSID = "ProcessId";
     
     /**
     *    Client Literals
     */
-    TX_LITERALS_VALUE(TX_LITERAL_AGENTID,         AgentId,         "AgentId");
-    TX_LITERALS_VALUE(TX_LITERAL_TARGETPROCESSID, TargetProcessId, "TargetProcessId");
+    static const char* TX_LITERAL_AGENTID = "AgentId";
+    static const char* TX_LITERAL_TARGETPROCESSID = "TargetProcessId";
+    static const char* TX_LITERAL_CLIENTMODE = "ClientMode";
     
     /**
     *   Miscellaneous Literals
     */
-	TX_LITERALS_VALUE(TX_LITERAL_TYPE,		Type,		"Type");
-    TX_LITERALS_VALUE(TX_LITERAL_TIMESTAMP, Timestamp,	"Timestamp");
-    TX_LITERALS_VALUE(TX_LITERAL_DATA,      Data,		"Data");
-    TX_LITERALS_VALUE(TX_LITERAL_X,         X,			"X");
-    TX_LITERALS_VALUE(TX_LITERAL_Y,         Y,			"Y");
-    TX_LITERALS_VALUE(TX_LITERAL_Z,         Z,			"Z");
+	static const char* TX_LITERAL_TYPE = "Type";
+    static const char* TX_LITERAL_TIMESTAMP = "Timestamp";
+    static const char* TX_LITERAL_DATA = "Data";
+    static const char* TX_LITERAL_PARAMETERS = "Parameters";
+    static const char* TX_LITERAL_X = "X";
+    static const char* TX_LITERAL_Y = "Y";
+    static const char* TX_LITERAL_Z = "Z";
     
     /**
     *   Bounds Literals
     */
-    TX_LITERALS_VALUE(TX_LITERAL_BOUNDS,      Bounds,      "Bounds");
-    TX_LITERALS_VALUE(TX_LITERAL_BOUNDSTYPE,  BoundsType,  "BoundsType");
-    TX_LITERALS_VALUE(TX_LITERAL_NONE,        None,        "None");    
-    TX_LITERALS_VALUE(TX_LITERAL_RECTANGULAR, Rectangular, "Rectangular");
-    TX_LITERALS_VALUE(TX_LITERAL_TOP,         Top,         "Top");
-    TX_LITERALS_VALUE(TX_LITERAL_LEFT,        Left,        "Left");
-    TX_LITERALS_VALUE(TX_LITERAL_RIGHT,       Right,       "Right");
-    TX_LITERALS_VALUE(TX_LITERAL_BOTTOM,      Bottom,      "Bottom");
-    TX_LITERALS_VALUE(TX_LITERAL_WIDTH,       Width,       "Width");
-    TX_LITERALS_VALUE(TX_LITERAL_HEIGHT,      Height,      "Height");
+    static const char* TX_LITERAL_BOUNDS = "Bounds";
+    static const char* TX_LITERAL_BOUNDSTYPE = "BoundsType";
+    static const char* TX_LITERAL_NONE = "None";    
+    static const char* TX_LITERAL_RECTANGULAR = "Rectangular";
+    static const char* TX_LITERAL_TOP = "Top";
+    static const char* TX_LITERAL_LEFT = "Left";
+    static const char* TX_LITERAL_RIGHT = "Right";
+    static const char* TX_LITERAL_BOTTOM = "Bottom";
+    static const char* TX_LITERAL_WIDTH = "Width";
+    static const char* TX_LITERAL_HEIGHT = "Height";
     
     /**
     *   Interactor Literals
     */
-    TX_LITERALS_VALUE(TX_LITERAL_ROOTID,       RootId,       "RootId");
-    TX_LITERALS_VALUE(TX_LITERAL_GLOBALINTERACTORWINDOWID, GlobalInteractorWindowId, "GlobalInteractorWindowId");
-    TX_LITERALS_VALUE(TX_LITERAL_MASK,        Mask,        "Mask");
-    TX_LITERALS_VALUE(TX_LITERAL_MASKID,      MaskId,      "MaskId");
-    TX_LITERALS_VALUE(TX_LITERAL_MASKBOUNDS,  MaskBounds,  "MaskBounds");
+    static const char* TX_LITERAL_ROOTID = "_RootId";
+    static const char* TX_LITERAL_GLOBALINTERACTORWINDOWID = "GlobalInteractorWindowId";
+    static const char* TX_LITERAL_MASK = "Mask";
+    static const char* TX_LITERAL_MASKID = "MaskId";
+    static const char* TX_LITERAL_MASKBOUNDS = "MaskBounds";
         
     /**
     *   Mask Literals
     */
-    TX_LITERALS_VALUE(TX_LITERAL_MASKTYPE,    MaskType,       "MaskType");
-    TX_LITERALS_VALUE(TX_LITERAL_ROWCOUNT,    RowCount,       "RowCount");
-    TX_LITERALS_VALUE(TX_LITERAL_COLUMNCOUNT, ColumnCount, "ColumnCount");
+    static const char* TX_LITERAL_MASKTYPE = "MaskType";
+    static const char* TX_LITERAL_ROWCOUNT = "RowCount";
+    static const char* TX_LITERAL_COLUMNCOUNT = "ColumnCount";
     
     /**
     * Gaze Point Data Behavior Literals
     */
-    TX_LITERALS_VALUE(TX_LITERAL_GAZEPOINTDATAMODE, GazePointDataMode, "GazePointDataMode");
-    TX_LITERALS_VALUE(TX_LITERAL_GAZEPOINTDATAEVENTTYPE, GazePointDataEventType, "GazePointDataEventType");
+    static const char* TX_LITERAL_GAZEPOINTDATAMODE = "GazePointDataMode";
+    static const char* TX_LITERAL_GAZEPOINTDATAEVENTTYPE = "GazePointDataEventType";
     
     /**
     *    Activation Behavior Literals
     */
-    TX_LITERALS_VALUE(TX_LITERAL_ACTIVATABLEEVENTTYPE,        ActivatableEventType,        "ActivatableEventType");
-    TX_LITERALS_VALUE(TX_LITERAL_HASACTIVATIONFOCUS,          HasActivationFocus,          "HasActivationFocus");    
-    TX_LITERALS_VALUE(TX_LITERAL_HASTENTATIVEACTIVATIONFOCUS, HasTentativeActivationFocus, "HasTentativeActivationFocus");
-    TX_LITERALS_VALUE(TX_LITERAL_ISACTIVATED,                 IsActivated,                 "IsActivated");
-    TX_LITERALS_VALUE(TX_LITERAL_ISTENTATIVEFOCUS,            IsTentativeFocusEnabled,     "IsTentativeFocusEnabled");
+    static const char* TX_LITERAL_ACTIVATABLEEVENTTYPE = "ActivatableEventType";
+    static const char* TX_LITERAL_HASACTIVATIONFOCUS = "HasActivationFocus";    
+    static const char* TX_LITERAL_HASTENTATIVEACTIVATIONFOCUS = "HasTentativeActivationFocus";
+    static const char* TX_LITERAL_ISACTIVATED = "IsActivated";
+    static const char* TX_LITERAL_ISTENTATIVEFOCUSENABLED = "IsTentativeFocusEnabled";
+    static const char* TX_LITERAL_ISSMALLITEMDETECTIONENABLED = "IsSmallItemDetectionEnabled";
 
     /**
     * Fixation Data Behavior Literals
     */
-    TX_LITERALS_VALUE(TX_LITERAL_FIXATIONDATAMODE, FixationDataMode, "FixationDataMode");
-    TX_LITERALS_VALUE(TX_LITERAL_FIXATIONDATAEVENTTYPE, FixationDataEventType, "FixationDataEventType");
+    static const char* TX_LITERAL_FIXATIONDATAMODE = "FixationDataMode";
+    static const char* TX_LITERAL_FIXATIONDATAEVENTTYPE = "FixationDataEventType";
 
     /**
     * Action data Behavior Literals 
     */
-    TX_LITERALS_VALUE(TX_LITERAL_ACTIONDATAEVENTTYPE, ActionDataEventType, "ActionDataEventType");
-    TX_LITERALS_VALUE(TX_LITERAL_ACTIVATIONMISSED, ActivationMissed, "ActivationMissed");
+    static const char* TX_LITERAL_ACTIONDATAEVENTTYPE = "ActionDataEventType";
+    static const char* TX_LITERAL_ACTIVATIONMISSED = "ActivationMissed";
     
     /**
     * Gaze-Aware Behavior Literals
     */
-    TX_LITERALS_VALUE(TX_LITERAL_HASGAZE,        HasGaze,  "HasGaze");
-    TX_LITERALS_VALUE(TX_LITERAL_GAZEAWAREMODE,  GazeAwareMode,  "GazeAwareMode");
-    TX_LITERALS_VALUE(TX_LITERAL_DELAYTIME,      DelayTime,  "DelayTime");
+    static const char* TX_LITERAL_HASGAZE = "HasGaze";
+    static const char* TX_LITERAL_GAZEAWAREMODE = "GazeAwareMode";
+    static const char* TX_LITERAL_DELAYTIME = "DelayTime";
     
     /**
     * Gaze Data Diagnostics Behavior Literals
     */
-    TX_LITERALS_VALUE(TX_LITERAL_QUALITY,    Quality,    "Quality");    
-    TX_LITERALS_VALUE(TX_LITERAL_NOISE,      Noise,      "Noise");
-    TX_LITERALS_VALUE(TX_LITERAL_INSACCADE,  InSaccade,  "InSaccade");
-    TX_LITERALS_VALUE(TX_LITERAL_INFIXATION, InFixation, "InFixation");
+    static const char* TX_LITERAL_QUALITY = "Quality";    
+    static const char* TX_LITERAL_NOISE = "Noise";
+    static const char* TX_LITERAL_INSACCADE = "InSaccade";
+    static const char* TX_LITERAL_INFIXATION = "InFixation";
     
     /**
     * Eye Position Behavior Literals
     */
-    TX_LITERALS_VALUE(TX_LITERAL_LEFTEYEPOSITION,     LeftEyePosition,     "LeftEyePosition");    
-    TX_LITERALS_VALUE(TX_LITERAL_RIGHTEYEPOSITION,    RightEyePosition,    "RightEyePosition");
-    TX_LITERALS_VALUE(TX_LITERAL_HASLEFTEYEPOSITION,  HasLeftEyePosition,  "HasLeftEyePosition");
-    TX_LITERALS_VALUE(TX_LITERAL_HASRIGHTEYEPOSITION, HasRightEyePosition, "HasRightEyePosition");
+    static const char* TX_LITERAL_LEFTEYEPOSITION = "LeftEyePosition";    
+    static const char* TX_LITERAL_RIGHTEYEPOSITION = "RightEyePosition";
+    static const char* TX_LITERAL_LEFTEYEPOSITIONNORMALIZED = "LeftEyePositionNormalized";    
+    static const char* TX_LITERAL_RIGHTEYEPOSITIONNORMALIZED = "RightEyePositionNormalized";
+    static const char* TX_LITERAL_HASLEFTEYEPOSITION = "HasLeftEyePosition";
+    static const char* TX_LITERAL_HASRIGHTEYEPOSITION = "HasRightEyePosition";
 
     /**
     * Presence Behavior Literals
     */
-    TX_LITERALS_VALUE(TX_LITERAL_PRESENCEDATA, Presence, "Presence");
+    static const char* TX_LITERAL_PRESENCEDATA = "Presence";
 
 
     /**
     * Pannable Behavior Literals
     */
-    TX_LITERALS_VALUE(TX_LITERAL_PANVELOCITYX,               PanVelocityX,            "PanVelocityX");
-    TX_LITERALS_VALUE(TX_LITERAL_PANVELOCITYY,               PanVelocityY,            "PanVelocityY");
-    TX_LITERALS_VALUE(TX_LITERAL_PANSTEPX,                   PanStepX,                "PanStepX");
-    TX_LITERALS_VALUE(TX_LITERAL_PANSTEPY,                   PanStepY,                "PanStepY");
-    TX_LITERALS_VALUE(TX_LITERAL_PANSTEPDURATION,            PanStepDuration,         "PanStepDuration");
-    TX_LITERALS_VALUE(TX_LITERAL_PANHANDSFREE,               PanHandsFree,            "PanHandsFree");
-    TX_LITERALS_VALUE(TX_LITERAL_PANPROFILE,                 PanningProfile,          "Profile");
-    TX_LITERALS_VALUE(TX_LITERAL_PANDIRECTIONSAVAILABLE,     PanDirectionsAvailable,  "PanDirectionsAvailable");
-    TX_LITERALS_VALUE(TX_LITERAL_PANPEAKVELOCITY,            PeakVelocity,            "PeakVelocity");
-    TX_LITERALS_VALUE(TX_LITERAL_PANADAPTVELOCITYTOVIEWPORT, AdaptVelocityToViewport, "AdaptVelocityToViewport");
-    TX_LITERALS_VALUE(TX_LITERAL_PANMAXZONERELATIVESIZE,     MaxPanZoneRelativeSize,  "MaxPanZoneRelativeSize");
-    TX_LITERALS_VALUE(TX_LITERAL_PANMAXZONESIZE,             MaxPanZoneSize,          "MaxPanZoneSize");
-    TX_LITERALS_VALUE(TX_LITERAL_PANZONESIZE,                PanZoneSize,             "PanZoneSize");
-    TX_LITERALS_VALUE(TX_LITERAL_PANNABLEEVENTTYPE,          PannableEventType,       "PannableEventType");
+    static const char* TX_LITERAL_PANVELOCITYX = "PanVelocityX";
+    static const char* TX_LITERAL_PANVELOCITYY = "PanVelocityY";
+    static const char* TX_LITERAL_PANSTEPX = "PanStepX";
+    static const char* TX_LITERAL_PANSTEPY = "PanStepY";
+    static const char* TX_LITERAL_PANSTEPDURATION = "PanStepDuration";
+    static const char* TX_LITERAL_PANHANDSFREE = "PanHandsFree";
+    static const char* TX_LITERAL_PANPROFILE = "Profile";
+    static const char* TX_LITERAL_PANDIRECTIONSAVAILABLE = "PanDirectionsAvailable";
+    static const char* TX_LITERAL_PANPEAKVELOCITY = "PeakVelocity";
+    static const char* TX_LITERAL_PANADAPTVELOCITYTOVIEWPORT = "AdaptVelocityToViewport";
+    static const char* TX_LITERAL_PANMAXZONERELATIVESIZE = "MaxPanZoneRelativeSize";
+    static const char* TX_LITERAL_PANMAXZONESIZE = "MaxPanZoneSize";
+    static const char* TX_LITERAL_PANZONESIZE = "PanZoneSize";
+    static const char* TX_LITERAL_PANNABLEEVENTTYPE = "PannableEventType";
 
     /**
     *   Callback Response Literals
     */
-    TX_LITERALS_VALUE(TX_LITERAL_REQUESTID,          RequestId,         "RequestId");
-    TX_LITERALS_VALUE(TX_LITERAL_ERRORMESSAGE,       ErrorMessage,      "ErrorMessage");
-    TX_LITERALS_VALUE(TX_LITERAL_RESULT,             Result,            "Result");
+    static const char* TX_LITERAL_REQUESTTYPE = "RequestType";
+    static const char* TX_LITERAL_REQUESTID = "RequestId";
+    static const char* TX_LITERAL_ERRORMESSAGE = "ErrorMessage";
+    static const char* TX_LITERAL_RESULT = "Result";
 
     /**
     *   Interaction Mode Literals
     */
-    TX_LITERALS_VALUE(TX_LITERAL_ACTIONTYPE,          ActionType,                    "ActionType");    
+    static const char* TX_LITERAL_ACTIONTYPE = "ActionType";    
 
     /**
     *   State literals
     */
-    TX_LITERALS_VALUE(TX_LITERAL_STATEPATH,              StatePath,           "StatePath");
-    TX_LITERALS_VALUE(TX_LITERAL_STATEPATHDELIMITER,     StatePathDelimiter,  ".");
+    static const char* TX_LITERAL_STATEPATH = "StatePath";
+    static const char* TX_LITERAL_STATEPATHDELIMITER = ".";    
 
-    /**
-    *  Version literals
-    */
-    TX_LITERALS_VALUE(TX_LITERAL_VERSIONMAJOR,              VersionMajor,           "VersionMajor");
-    TX_LITERALS_VALUE(TX_LITERAL_VERSIONMINOR,              VersionMinor,           "VersionMinor");
-    TX_LITERALS_VALUE(TX_LITERAL_VERSIONBUILD,              VersionBuild,           "VersionBuild");
+	/*
+	*  Configuration Tool Literals
+	*/
+	static const char* TX_LITERAL_CONFIGURATIONTOOL = "ConfigurationTool";
 
 
-TX_CONSTANTS_END
 
 /*********************************************************************************************************************/
 
@@ -190,46 +193,53 @@ TX_CONSTANTS_END
  *   GETTABLE.
  *
  * @field TX_STATEPATH_STATE: 
- *   Holds the eyetracking status. The value is of type TX_EYETRACKINGDEVICESTATUS.
+ *   Holds the eye tracking status. The value is of type TX_EYETRACKINGDEVICESTATUS.
  *   GETTABLE.
  *
- * @field TX_STATEPATH_PRESENCEDATA:
- *   Holds data about user presence. The value is of type TX_PRESENCEDATA.
+ * @field TX_STATEPATH_PROFILENAME: 
+ *   Holds the name of the eye tracking profile used. The value is of type TX_STRING.
  *   GETTABLE.
  *
- * @field TX_STATEPATH_ACTIONDATA:
- *   Pulses data when interactions fails. The value is of type TX_ACTIONDATA.
+ * @field TX_STATEPATH_CONFIGURATIONSTATUS:
+ *   Holds the configuration status of the eye tracker. The value is of type TX_EYETRACKINGCONFIGURATIONSTATUS.
  *   GETTABLE.
+ *   \since Version 1.1.0
+ *
+ * @field TX_STATEPATH_ENGINEVERSION:
+ *   Reports the engine version. The value is of type TX_STRING.
+ *   GETTABLE.
+ *
+ * @field TX_STATEPATH_USERPRESENCE:
+ *   Holds data about user presence. The value is of type TX_USERPRESENCE.
+ *   GETTABLE.
+ *
+ * @field TX_STATEPATH_FAILEDACTION:
+ *   Notifies when interactions fail. The value is of type TX_FAILEDACTIONTYPE.
+ *   SUBSCRIBABLE.
+ * 
+ * @field TX_STATEPATH_INTERACTIONMODES:
+ *   Holds the current engine interaction mode. The value is of type TX_INTERACTIONMODES.
+ *   GETTABLE.
+ *   \since Version 1.1.0
+ * 
  */
-TX_CONSTANTS_BEGIN(StatePaths)    
-    TX_LITERALS_VALUE(TX_STATEPATH_EYETRACKING,      EyeTracking,    "eyetracking")
-    TX_LITERALS_VALUE(TX_STATEPATH_SCREENBOUNDS,     ScreenBounds,   "eyetracking.screenBounds")
-    TX_LITERALS_VALUE(TX_STATEPATH_DISPLAYSIZE,      DisplaySize,    "eyetracking.displaySize")
-    TX_LITERALS_VALUE(TX_STATEPATH_STATE,            State,          "eyetracking.state")
-    TX_LITERALS_VALUE(TX_STATEPATH_PRESENCEDATA,     PresenceData,   "presenceData")
-    TX_LITERALS_VALUE(TX_STATEPATH_ACTIONDATA,       ActionData,     "actionData")
-TX_CONSTANTS_END
-
-/*********************************************************************************************************************/
-
-/**
- * Constants for mask weights.
- *
- * @field TX_MASKWEIGHT_NONE:
- *	Use this mask weight to indicate that a region of an interactor has no weight (not interactable).
- *
- * @field TX_MASKWEIGHT_DEFAULT:
- *  Use this mask weight to indicate that a region of an interactor has a default weight.
- 
- * @field TX_MASKWEIGHT_HIGH:
- *  Use this mask weight to indicate that a region of an interactor has a high weight (more likely to be interacted with).
- */
-TX_CONSTANTS_BEGIN(MaskWeights)
-	TX_CONSTANT_BYTE_VALUE(TX_MASKWEIGHT_NONE, None, 0)
-	TX_CONSTANT_BYTE_VALUE(TX_MASKWEIGHT_DEFAULT, Default, 1)
-	TX_CONSTANT_BYTE_VALUE(TX_MASKWEIGHT_HIGH, High, 255)
-TX_CONSTANTS_END
     
+    static const char* TX_STATEPATH_EYETRACKING = "eyeTracking";
+    static const char* TX_STATEPATH_SCREENBOUNDS = "eyeTracking.screenBounds";
+    static const char* TX_STATEPATH_DISPLAYSIZE = "eyeTracking.displaySize";
+    static const char* TX_STATEPATH_EYETRACKINGSTATE = "eyeTracking.state";
+	static const char* TX_STATEPATH_PROFILENAME = "eyeTracking.profileName";
+	static const char* TX_STATEPATH_CONFIGURATIONSTATUS = "eyeTracking.configurationStatus";
+    
+    static const char* TX_STATEPATH_ENGINEVERSION = "engineVersion";
+
+    static const char* TX_STATEPATH_USERPRESENCE = "userPresence";
+
+    static const char* TX_STATEPATH_FAILEDACTION = "failedAction";
+
+	static const char* TX_STATEPATH_INTERACTIONMODES = "status.interaction.interactionModes";
+
+
 /*********************************************************************************************************************/
 
 #endif /* !defined(__TOBII_TX_LITERALS__H__) */

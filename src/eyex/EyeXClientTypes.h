@@ -3,40 +3,31 @@
  * EyeXClientTypes.h
  *********************************************************************************************************************/
 
-#if !defined(__TOBII_TX_TYPES__H__)
-#define __TOBII_TX_TYPES__H__
+#if !defined(__TOBII_TX_CLIENT_TYPES__H__)
+#define __TOBII_TX_CLIENT_TYPES__H__
 
 /*********************************************************************************************************************
  * Common types
  *********************************************************************************************************************/
 
-/**
-  Macro that generates a type of the specified type.
- */
-#if !defined(TX_DEFINE_TYPE)
-#define TX_DEFINE_TYPE(type, name) typedef type name;
-#endif /* !defined(TX_TRANSLATE_TYPE) */
-
-/*********************************************************************************************************************/
-
-TX_DEFINE_TYPE(void*,                               TX_USERPARAM);
-TX_DEFINE_TYPE(struct txInteractionObject*,         TX_HANDLE);
-TX_DEFINE_TYPE(const struct txInteractionObject*,   TX_CONSTHANDLE);
-TX_DEFINE_TYPE(struct txProperty*,                  TX_PROPERTYHANDLE);
-TX_DEFINE_TYPE(const struct txProperty*,            TX_CONSTPROPERTYHANDLE);
-TX_DEFINE_TYPE(struct txInteractionContext*,        TX_CONTEXTHANDLE);
-TX_DEFINE_TYPE(const struct txInteractionContext*,  TX_CONSTCONTEXTHANDLE);
-TX_DEFINE_TYPE(int,                                 TX_TICKET);
-TX_DEFINE_TYPE(int,                                 TX_BOOL);
-TX_DEFINE_TYPE(unsigned char,                       TX_BYTE);
-TX_DEFINE_TYPE(int,                                 TX_SIZE);
-TX_DEFINE_TYPE(int,                                 TX_INTEGER);
-TX_DEFINE_TYPE(double,                              TX_REAL);
-TX_DEFINE_TYPE(char,                                TX_CHAR);
-TX_DEFINE_TYPE(char*,                               TX_STRING);
-TX_DEFINE_TYPE(const char*,                         TX_CONSTSTRING);
-TX_DEFINE_TYPE(void*,                               TX_RAWPTR);
-TX_DEFINE_TYPE(int,                                 TX_THREADID);
+typedef void* TX_USERPARAM;
+typedef struct txInteractionObject* TX_HANDLE;
+typedef const struct txInteractionObject* TX_CONSTHANDLE;
+typedef struct txProperty* TX_PROPERTYHANDLE;
+typedef const struct txProperty* TX_CONSTPROPERTYHANDLE;
+typedef struct txContext* TX_CONTEXTHANDLE;
+typedef const struct txContext* TX_CONSTCONTEXTHANDLE;
+typedef int TX_TICKET;
+typedef int TX_BOOL;
+typedef unsigned char TX_BYTE;
+typedef int TX_SIZE;
+typedef int TX_INTEGER;
+typedef double TX_REAL;
+typedef char TX_CHAR;
+typedef char* TX_STRING;
+typedef const char* TX_CONSTSTRING;
+typedef void* TX_RAWPTR;
+typedef int TX_THREADID;
 
 /*********************************************************************************************************************/
 
@@ -56,35 +47,35 @@ TX_DEFINE_TYPE(int,                                 TX_THREADID);
 /*********************************************************************************************************************/
 
 /**
-  TX_SYSTEMCOMPONENTOVERRIDEFLAGS    
+  TX_EYEXCOMPONENTOVERRIDEFLAGS    
 
-  Enumeration for all system component override flags.
-  When calling txInitializeSystem these flags must be combined to specify which system components should be overriden.
+  Enumeration for all client environment component override flags.
+  When calling txInitializeEyeX these flags must be combined to specify which components should be overridden.
 
-  @field TX_SYSTEMCOMPONENTOVERRIDEFLAG_NONE:
-    No system component should be overriden.
-    
-  @field TX_SYSTEMCOMPONENTOVERRIDEFLAG_MEMORYMODEL:
-    The memory model should be overriden.
-    
-  @field TX_SYSTEMCOMPONENTOVERRIDEFLAG_THREADINGMODEL:
-    The threading model should be overriden.
-    
-  @field TX_SYSTEMCOMPONENTOVERRIDEFLAG_LOGGINGMODEL:
-    The logging model should be overriden.
-    The logging model can be overriden by just specifying some of the standard log targets (see TX_LOGTARGET) or by
+  @field TX_EYEXCOMPONENTOVERRIDEFLAG_NONE:
+    No client environment component should be overridden.
+
+  @field TX_EYEXCOMPONENTOVERRIDEFLAG_LOGGINGMODEL:
+    The logging model should be overridden.
+    The logging model can be overridden by just specifying some of the standard log targets (see TX_LOGTARGET) or by
     a custom user implemented log writer.
-	
-  @field TX_SYSTEMCOMPONENTOVERRIDEFLAG_SCHEDULINGMODEL:
-    The scheduling model should be overriden.
+    
+  @field TX_EYEXCOMPONENTOVERRIDEFLAG_INTERNAL_MEMORYMODEL:
+    The memory model should be overridden. For internal use only.
+    
+  @field TX_EYEXCOMPONENTOVERRIDEFLAG_INTERNAL_THREADINGMODEL:
+    The threading model should be overridden. For internal use only.
+    
+  @field TX_EYEXCOMPONENTOVERRIDEFLAG_INTERNAL_SCHEDULINGMODEL:
+    The scheduling model should be overridden. For internal use only.
  */ 
-TX_BEGIN_FLAGS(SystemComponentOverrideFlags)
-    TX_ENUM_VALUE(TX_SYSTEMCOMPONENTOVERRIDEFLAG_NONE,            None) = TX_FLAGS_NONE_VALUE,  
-    TX_ENUM_VALUE(TX_SYSTEMCOMPONENTOVERRIDEFLAG_MEMORYMODEL,     MemoryModel) = 1 << 0,
-    TX_ENUM_VALUE(TX_SYSTEMCOMPONENTOVERRIDEFLAG_THREADINGMODEL,  TheadingModel) = 1 << 1,
-    TX_ENUM_VALUE(TX_SYSTEMCOMPONENTOVERRIDEFLAG_LOGGINGMODEL,    LoggingModel) = 1 << 2,
-    TX_ENUM_VALUE(TX_SYSTEMCOMPONENTOVERRIDEFLAG_SCHEDULINGMODEL, SchedulingModel) = 1 << 3
-TX_END_FLAGS(TX_SYSTEMCOMPONENTOVERRIDEFLAGS, SystemComponentOverrideFlags)
+typedef enum {
+    TX_EYEXCOMPONENTOVERRIDEFLAG_NONE = TX_FLAGS_NONE_VALUE,  
+    TX_EYEXCOMPONENTOVERRIDEFLAG_LOGGINGMODEL = 1 << 0,
+    TX_EYEXCOMPONENTOVERRIDEFLAG_INTERNAL_MEMORYMODEL = 1 << 1,
+    TX_EYEXCOMPONENTOVERRIDEFLAG_INTERNAL_THREADINGMODEL = 1 << 2,    
+    TX_EYEXCOMPONENTOVERRIDEFLAG_INTERNAL_SCHEDULINGMODEL = 1 << 3
+} TX_EYEXCOMPONENTOVERRIDEFLAGS;
 
 /*********************************************************************************************************************/
 
@@ -93,33 +84,33 @@ TX_END_FLAGS(TX_SYSTEMCOMPONENTOVERRIDEFLAGS, SystemComponentOverrideFlags)
 
   Enumeration for all connection states.
   These values are used to notify the application of the current connection state. 
-  To recieve these notifications the client needs to subscribe using txRegisterConnectionStateChangedHandler and then 
+  To receive these notifications the client needs to subscribe using txRegisterConnectionStateChangedHandler and then 
   call txEnableConnection. 
 
   @field TX_CONNECTIONSTATE_CONNECTED:
-    The client is now connected to the server.
+    The client is now connected to the client.
 
   @field TX_CONNECTIONSTATE_DISCONNECTED:
-    The client is now disconnected from the server. Unless this is due to txDisableConnection being called the client
+    The client is now disconnected from the client. Unless this is due to txDisableConnection being called the client
     will shortly attempt to connect again.
     
   @field TX_CONNECTIONSTATE_TRYINGTOCONNECT:
-    The client is now trying to connect to the server. This is the first state being sent to the application after 
+    The client is now trying to connect to the client. This is the first state being sent to the application after 
     txEnableConnection has been called.
     
   @field TX_CONNECTIONSTATE_SERVERVERSIONTOOLOW:
-    The server version is too low. The client is not connected and will not try to reconnect.
+    the client version is too low. The client is not connected and will not try to reconnect.
     
   @field TX_CONNECTIONSTATE_SERVERVERSIONTOOHIGH:
-    The server version is too high. The client is not connected and will not try to reconnect.
+    the client version is too high. The client is not connected and will not try to reconnect.
  */ 
-TX_BEGIN_ENUM(ConnectionState)
-    TX_ENUM_VALUE(TX_CONNECTIONSTATE_CONNECTED,             Connected) = TX_ENUM_STARTVALUE,  
-    TX_ENUM_VALUE(TX_CONNECTIONSTATE_DISCONNECTED,          Disconnected),
-    TX_ENUM_VALUE(TX_CONNECTIONSTATE_TRYINGTOCONNECT,       TryingToConnect),
-    TX_ENUM_VALUE(TX_CONNECTIONSTATE_SERVERVERSIONTOOLOW,   ServerVersionTooLow),
-    TX_ENUM_VALUE(TX_CONNECTIONSTATE_SERVERVERSIONTOOHIGH,  ServerVersionTooHigh)
-TX_END_ENUM(TX_CONNECTIONSTATE, ConnectionState)
+typedef enum {
+    TX_CONNECTIONSTATE_CONNECTED = TX_ENUM_STARTVALUE,  
+    TX_CONNECTIONSTATE_DISCONNECTED,
+    TX_CONNECTIONSTATE_TRYINGTOCONNECT,
+    TX_CONNECTIONSTATE_SERVERVERSIONTOOLOW,
+    TX_CONNECTIONSTATE_SERVERVERSIONTOOHIGH
+} TX_CONNECTIONSTATE;
 
 /*********************************************************************************************************************/
 
@@ -127,7 +118,7 @@ TX_END_ENUM(TX_CONNECTIONSTATE, ConnectionState)
   TX_LOGTARGET
 
   Enumeration for all log targets.
-  When overring the logging model these flags specify which log targets to use. The flags can be combined.
+  When overriding the logging model these flags specify which log targets to use. The flags can be combined.
 
   @field TX_LOGTARGET_NONE:
     No logging should occur at all.
@@ -141,12 +132,12 @@ TX_END_ENUM(TX_CONNECTIONSTATE, ConnectionState)
   @field TX_LOGTARGET_CUSTOM:
     The specified TX_LOGCALLBACK should be invoked for custom logging.
  */
-TX_BEGIN_FLAGS(LogTarget)
-    TX_ENUM_VALUE(TX_LOGTARGET_NONE,    None) = TX_FLAGS_NONE_VALUE,
-    TX_ENUM_VALUE(TX_LOGTARGET_CONSOLE, Console) = 1 << 0,
-    TX_ENUM_VALUE(TX_LOGTARGET_TRACE,   Trace) = 1 << 1,    
-    TX_ENUM_VALUE(TX_LOGTARGET_CUSTOM,  Custom) = 1 << 2
-TX_END_FLAGS(TX_LOGTARGET, LogTarget)
+typedef enum {
+    TX_LOGTARGET_NONE = TX_FLAGS_NONE_VALUE,
+    TX_LOGTARGET_CONSOLE = 1 << 0,
+    TX_LOGTARGET_TRACE = 1 << 1,    
+    TX_LOGTARGET_CUSTOM = 1 << 2
+} TX_LOGTARGET;
 
 /*********************************************************************************************************************/
 
@@ -168,12 +159,12 @@ TX_END_FLAGS(TX_LOGTARGET, LogTarget)
   @field TX_LOGLEVEL_ERROR:
     The message indicates that there is some kind of error.
  */
-TX_BEGIN_ENUM(LogLevel)
-    TX_ENUM_VALUE(TX_LOGLEVEL_DEBUG,   Debug)  = TX_ENUM_STARTVALUE,
-    TX_ENUM_VALUE(TX_LOGLEVEL_INFO,    Info),
-    TX_ENUM_VALUE(TX_LOGLEVEL_WARNING, Warning),
-    TX_ENUM_VALUE(TX_LOGLEVEL_ERROR,   Error)    
-TX_END_ENUM(TX_LOGLEVEL, LogLevel)
+typedef enum {
+    TX_LOGLEVEL_DEBUG  = TX_ENUM_STARTVALUE,
+    TX_LOGLEVEL_INFO,
+    TX_LOGLEVEL_WARNING,
+    TX_LOGLEVEL_ERROR    
+} TX_LOGLEVEL;
 
 /*********************************************************************************************************************/
 
@@ -181,22 +172,22 @@ TX_END_ENUM(TX_LOGLEVEL, LogLevel)
   TX_SCHEDULINGMODE
 
   Enumeration for all schedulng modes.
-  When overring the scheduling model the mode specifies which of the available scheduling modes to use.
+  When overriding the scheduling model the mode specifies which of the available scheduling modes to use.
 
   @field TX_SCHEDULINGMODE_DIRECT:
     All jobs are performed immediately on the thread that calls them.
 
   @field TX_SCHEDULINGMODE_USERFRAME:
-	All jobs are performed when the txPerformScheduledJobs are called.
+    All jobs are performed when the txPerformScheduledJobs are called.
     
   @field TX_SCHEDULINGMODE_CUSTOM:
-	Whenever a job is to be performed a callback function is invoked giving the client application full control.
+    Whenever a job is to be performed a callback function is invoked giving the client application full control.
  */
-TX_BEGIN_FLAGS(SchedulingMode)
-    TX_ENUM_VALUE(TX_SCHEDULINGMODE_DIRECT,    Direct) = TX_ENUM_STARTVALUE,
-    TX_ENUM_VALUE(TX_SCHEDULINGMODE_USERFRAME, UserFrame),
-    TX_ENUM_VALUE(TX_SCHEDULINGMODE_CUSTOM,    Custom)    
-TX_END_FLAGS(TX_SCHEDULINGMODE, SchedulingMode)
+typedef enum {
+    TX_SCHEDULINGMODE_DIRECT = TX_ENUM_STARTVALUE,
+    TX_SCHEDULINGMODE_USERFRAME,
+    TX_SCHEDULINGMODE_CUSTOM    
+} TX_SCHEDULINGMODE;
 
 /*********************************************************************************************************************/
 
@@ -223,14 +214,14 @@ TX_END_FLAGS(TX_SCHEDULINGMODE, SchedulingMode)
   @field TX_PROPERTYVALUETYPE_BLOB:
     The property currently holds a blob.
  */ 
-TX_BEGIN_ENUM(PropertyValueType)
-    TX_ENUM_VALUE(TX_PROPERTYVALUETYPE_EMPTY,   Empty) = TX_ENUM_STARTVALUE,
-    TX_ENUM_VALUE(TX_PROPERTYVALUETYPE_OBJECT,  Object),
-    TX_ENUM_VALUE(TX_PROPERTYVALUETYPE_INTEGER, Integer),
-    TX_ENUM_VALUE(TX_PROPERTYVALUETYPE_REAL,    Real),
-    TX_ENUM_VALUE(TX_PROPERTYVALUETYPE_STRING,  String),
-    TX_ENUM_VALUE(TX_PROPERTYVALUETYPE_BLOB,    Blob)
-TX_END_ENUM(TX_PROPERTYVALUETYPE, PropertyValueType)
+typedef enum {
+    TX_PROPERTYVALUETYPE_EMPTY = TX_ENUM_STARTVALUE,
+    TX_PROPERTYVALUETYPE_OBJECT,
+    TX_PROPERTYVALUETYPE_INTEGER,
+    TX_PROPERTYVALUETYPE_REAL,
+    TX_PROPERTYVALUETYPE_STRING,
+    TX_PROPERTYVALUETYPE_BLOB
+} TX_PROPERTYVALUETYPE;
 
 /*********************************************************************************************************************/
 
@@ -245,10 +236,32 @@ TX_END_ENUM(TX_PROPERTYVALUETYPE, PropertyValueType)
   @field TX_PROPERTYBAGTYPE_ARRAY:
     The property bag is an array with sequentially named properties appearing in the order they where inserted.
  */
-TX_BEGIN_ENUM(PropertyBagType)
-    TX_ENUM_VALUE(TX_PROPERTYBAGTYPE_OBJECT, Object) = TX_ENUM_STARTVALUE,
-    TX_ENUM_VALUE(TX_PROPERTYBAGTYPE_ARRAY,  Array)
-TX_END_ENUM(TX_PROPERTYBAGTYPE, PropertyBagType)
+typedef enum {
+    TX_PROPERTYBAGTYPE_OBJECT = TX_ENUM_STARTVALUE,
+    TX_PROPERTYBAGTYPE_ARRAY
+} TX_PROPERTYBAGTYPE;
+
+/*********************************************************************************************************************/
+
+/**
+  TX_EYEXAVAILABILITY
+
+  Enumeration for the availability status of the EyeX Engine.
+
+  @field TX_EYEXAVAILABILITY_NOTAVAILABLE:
+    EyeX Engine is not installed on the system or otherwise not available.
+
+  @field TX_EYEXAVAILABILITY_NOTRUNNING:
+	EyeX Engine is not running.
+  
+  @field TX_EYEXAVAILABILITY_RUNNING:
+	EyeX Engine is running.
+ */
+typedef enum {
+	TX_EYEXAVAILABILITY_NOTAVAILABLE = TX_ENUM_STARTVALUE,
+	TX_EYEXAVAILABILITY_NOTRUNNING,
+	TX_EYEXAVAILABILITY_RUNNING
+} TX_EYEXAVAILABILITY;
 
 /*********************************************************************************************************************
  * Callbacks
@@ -267,22 +280,22 @@ TX_END_ENUM(TX_PROPERTYBAGTYPE, PropertyBagType)
   @return 
     void
  */ 
-TX_DEFINE_CALLABLE(TX_CONNECTIONSTATECHANGEDCALLBACK, ConnectionStateChangedCallback, void, (
+typedef void (TX_CALLCONVENTION *TX_CONNECTIONSTATECHANGEDCALLBACK)(
     TX_CONNECTIONSTATE state,
     TX_USERPARAM userParam
-    ));
+    );
 
 #if defined(__cplusplus)
 #ifndef TOBII_TX_INTEROP
 #include <functional>
 
     namespace Tx {
-		typedef std::function<void (TX_CONNECTIONSTATE)> ConnectionStateChangedCallback;
-	}
+        typedef std::function<void (TX_CONNECTIONSTATE)> ConnectionStateChangedCallback;
+    }
 
 #endif
 #endif
-	
+    
 /*********************************************************************************************************************/
 
 /**
@@ -293,22 +306,22 @@ TX_DEFINE_CALLABLE(TX_CONNECTIONSTATECHANGEDCALLBACK, ConnectionStateChangedCall
  
   @param userParam [in]: 
     The user parameter provided to the asynchronous operation.
-		
+        
   @return 
     void
  */
-TX_DEFINE_CALLABLE(TX_ASYNCDATACALLBACK, AsyncDataCallback, void ,(    
-    TX_CONSTHANDLE hAsyncData,
+typedef void (TX_CALLCONVENTION *TX_ASYNCDATACALLBACK)(    
+    TX_CALLBACK_PARAM(TX_CONSTHANDLE) hAsyncData,
     TX_USERPARAM userParam
-    ));
+    );
 
 #if defined(__cplusplus)
 #ifndef TOBII_TX_INTEROP
 #include <functional>
 
     namespace Tx {
-		typedef std::function<void (TX_CONSTHANDLE)> AsyncDataCallback;
-	}
+        typedef std::function<void (TX_CONSTHANDLE)> AsyncDataCallback;
+    }
 
 #endif
 #endif
@@ -317,7 +330,7 @@ TX_DEFINE_CALLABLE(TX_ASYNCDATACALLBACK, AsyncDataCallback, void ,(
 
 /**
   Function run by a thread.
-    See txInitializeSystem, TX_THREADINGMODEL
+    See txInitializeEyeX, TX_THREADINGMODEL
  
   @param threadWorkerParam [in]: 
     The user parameter provided to the CreateThreadCallback.  
@@ -325,15 +338,15 @@ TX_DEFINE_CALLABLE(TX_ASYNCDATACALLBACK, AsyncDataCallback, void ,(
   @return 
     void
  */
-TX_DEFINE_CALLABLE(TX_THREADWORKERFUNCTION, ThreadWorkerFunction, void, (
+typedef void (TX_CALLCONVENTION *TX_THREADWORKERFUNCTION)(
     TX_USERPARAM threadWorkerParam
-    ));
+    );
 
 /*********************************************************************************************************************/
 
 /**
   Callback used to create a thread.
-    See txInitializeSystem, TX_THREADINGMODEL
+    See txInitializeEyeX, TX_THREADINGMODEL
  
   @param worker [in]: 
    Worker function that will be run by the thread.
@@ -347,17 +360,17 @@ TX_DEFINE_CALLABLE(TX_THREADWORKERFUNCTION, ThreadWorkerFunction, void, (
   @return 
     TX_THREADID, the id of the created thread.
  */
-TX_DEFINE_CALLABLE(TX_CREATETHREADCALLBACK, CreateThreadCallback, TX_THREADID, (
+typedef TX_THREADID (TX_CALLCONVENTION *TX_CREATETHREADCALLBACK)(
     TX_THREADWORKERFUNCTION worker,
     TX_USERPARAM threadWorkerParam,
     TX_USERPARAM userParam
-    ));
+    );
 
 /*********************************************************************************************************************/
 
 /**
   Callback used to get the current thread id.
-    See txInitializeSystem, TX_THREADINGMODEL
+    See txInitializeEyeX, TX_THREADINGMODEL
  
   @param userParam [in]: 
     The user parameter provided by the TX_THREADINGMODEL structure.
@@ -365,15 +378,15 @@ TX_DEFINE_CALLABLE(TX_CREATETHREADCALLBACK, CreateThreadCallback, TX_THREADID, (
   @return 
     TX_THREADID, the id of the current thread
  */
-TX_DEFINE_CALLABLE(TX_GETCURRENTTHREADIDCALLBACK, GetCurrentThreadIdCallback, TX_THREADID, (
+typedef TX_THREADID (TX_CALLCONVENTION *TX_GETCURRENTTHREADIDCALLBACK)(
     TX_USERPARAM userParam
-    ));
+    );
 
 /*********************************************************************************************************************/
 
 /**
   Callback used to join a thread.
-    See txInitializeSystem, TX_THREADINGMODEL
+    See txInitializeEyeX, TX_THREADINGMODEL
  
   @param threadId [in]: 
     The id of the thread to join.
@@ -384,16 +397,16 @@ TX_DEFINE_CALLABLE(TX_GETCURRENTTHREADIDCALLBACK, GetCurrentThreadIdCallback, TX
   @return 
     TX_TRUE if the thread was successfully joined. TX_FALSE on non existing thread.
  */
-TX_DEFINE_CALLABLE(TX_JOINTHREADCALLBACK, JoinThreadCallback, TX_BOOL, (
+typedef TX_BOOL (TX_CALLCONVENTION *TX_JOINTHREADCALLBACK)(
     TX_THREADID threadId,
     TX_USERPARAM userParam
-    ));
+    );
 
 /*********************************************************************************************************************/
 
 /**
   Callback used to delete a thread.
-    See txInitializeSystem, TX_THREADINGMODEL
+    See txInitializeEyeX, TX_THREADINGMODEL
  
   @param threadId [in]: 
     The id of the thread to be deleted.
@@ -404,10 +417,10 @@ TX_DEFINE_CALLABLE(TX_JOINTHREADCALLBACK, JoinThreadCallback, TX_BOOL, (
   @return 
     TX_TRUE if the thread was successfully deleted, otherwise TX_FALSE. 
  */
-TX_DEFINE_CALLABLE(TX_DELETETHREADCALLBACK, DeleteThreadCallback, TX_BOOL, (
+typedef TX_BOOL (TX_CALLCONVENTION *TX_DELETETHREADCALLBACK)(
     TX_THREADID threadId,
     TX_USERPARAM userParam
-    ));
+    );
 
 /*********************************************************************************************************************/
 
@@ -418,9 +431,9 @@ TX_DEFINE_CALLABLE(TX_DELETETHREADCALLBACK, DeleteThreadCallback, TX_BOOL, (
   @param userParam [in]: 
     Normally used for capture outside the scope of the callback.
  */
-TX_DEFINE_CALLABLE(TX_DELETEMODELCALLBACK, ReleaseCallback, void, (
+typedef void (TX_CALLCONVENTION *TX_DELETEMODELCALLBACK)(
     TX_USERPARAM userParam
-    ));
+    );
 
 /*********************************************************************************************************************/
 
@@ -434,16 +447,16 @@ TX_DEFINE_CALLABLE(TX_DELETEMODELCALLBACK, ReleaseCallback, void, (
   @return 
     void
  */
-TX_DEFINE_CALLABLE(TX_ALLOCATORFUNCTION, AllocatorFunction, void, (
+typedef void (TX_CALLCONVENTION *TX_ALLOCATORFUNCTION)(
     TX_INTEGER length
-    ));
+    );
 
 /*********************************************************************************************************************/
 
 /**
   Callback for logging.
     If a custom logging model is set, see TX_LOGGINGMODEL, this callback will be invoked when a log message is 
-	written by the API.
+    written by the API.
  
   @param level [in]: 
     The level of log message, see TX_LOGLEVEL for levels.
@@ -460,18 +473,18 @@ TX_DEFINE_CALLABLE(TX_ALLOCATORFUNCTION, AllocatorFunction, void, (
   @return 
     void
  */
-TX_DEFINE_CALLABLE(TX_LOGCALLBACK, LogCallback, void, (
+typedef void (TX_CALLCONVENTION *TX_LOGCALLBACK)(
     TX_LOGLEVEL level,
     TX_CONSTSTRING scope,
     TX_CONSTSTRING message,
     TX_USERPARAM userParam
-    ));
+    );
 
-/*********************************************************************************************************************
+/*********************************************************************************************************************/
 
 /**
   Function provided by the API when a job is scheduled.
-	See TX_SCHEDULEJOBCALLBACK.
+    See TX_SCHEDULEJOBCALLBACK.
 
   @param jobParam [in]: 
     The user parameter provided by the API when a job is scheduled.  
@@ -479,16 +492,16 @@ TX_DEFINE_CALLABLE(TX_LOGCALLBACK, LogCallback, void, (
   @return 
     void
  */
-TX_DEFINE_CALLABLE(TX_PERFORMJOBFUNCTION, PerformJobFunction, void, (
+typedef void (TX_CALLCONVENTION *TX_PERFORMJOBFUNCTION)(
     TX_USERPARAM jobParam
-    ));
+    );
 
 /*********************************************************************************************************************/
 
 /**
   Callback for scheduling a job.
     If a custom scheduling model is set, see TX_SCHEDULINGMODEL, this callback will be invoked when a job is to be
-	scheduled.
+    scheduled.
  
   @param performJob [in]: 
     The function to invoke when the job is to be performed.
@@ -497,16 +510,16 @@ TX_DEFINE_CALLABLE(TX_PERFORMJOBFUNCTION, PerformJobFunction, void, (
     A parameter used to provide a context to the job.
  
   @param userParam [in]: 
-	The user parameter provided to the TX_SCHEDULINGMODEL.
+    The user parameter provided to the TX_SCHEDULINGMODEL.
    
   @return 
     void
  */
-TX_DEFINE_CALLABLE(TX_SCHEDULEJOBCALLBACK, ScheduleJobCallback, void, (
+typedef void (TX_CALLCONVENTION *TX_SCHEDULEJOBCALLBACK)(
     TX_PERFORMJOBFUNCTION performJob,
     TX_USERPARAM jobParam,
-	TX_USERPARAM userParam
-    ));
+    TX_USERPARAM userParam
+    );
 
 /*********************************************************************************************************************
  * Structs
@@ -527,12 +540,12 @@ TX_DEFINE_CALLABLE(TX_SCHEDULEJOBCALLBACK, ScheduleJobCallback, void, (
   @field Height:
     The height of the rectangle.
  */
-TX_STRUCT_BEGIN(TX_RECT, Rect)
+typedef struct {
     TX_REAL             X;                             
     TX_REAL             Y;                             
     TX_REAL             Width;                         
     TX_REAL             Height;                        
-TX_STRUCT_END(TX_RECT, Rect)
+} TX_RECT;
 
 /*********************************************************************************************************************/
 
@@ -545,10 +558,10 @@ TX_STRUCT_END(TX_RECT, Rect)
   @field Y:
     The Y coordinate of the vector.
  */
-TX_STRUCT_BEGIN(TX_VEC2, Vec2)
+typedef struct {
     TX_REAL             X;                              
     TX_REAL             Y;                              
-TX_STRUCT_END(TX_VEC2, Vec2)
+} TX_VECTOR2;
 
  /*********************************************************************************************************************/
 
@@ -561,10 +574,10 @@ TX_STRUCT_END(TX_VEC2, Vec2)
   @field Height:
     The height of the size.
  */
-TX_STRUCT_BEGIN(TX_SIZE2, Size2)
+typedef struct {
     TX_REAL             Width;                              
     TX_REAL             Height;                             
-TX_STRUCT_END(TX_SIZE2, Size2)
+} TX_SIZE2;
 
 /*********************************************************************************************************************/
 
@@ -572,23 +585,24 @@ TX_STRUCT_END(TX_SIZE2, Size2)
   Struct for pannable behavior parameters.
    
   @field IsHandsFreeEnabled:
-    Specifies if a user input action is needed to initiate pan.
+    Set to false - hands free panning is not yet implemented.
   
   @field Profile:
     The panning profile. See TX_PANNINGPROFILE.
     
   @field PeakVelocity:
-    The maximum velocity of panning action, in millimeters per second.
+    Currently not used.
   
   @field PanDirectionsAvailable:
-    The available pan direction flags. See TX_PANDIRECTION.
+    Flags specifying which pan directions are currently possible. See TX_PANDIRECTION.
+    Correct pan direction flags are needed for panning to work properly. 
  */
-TX_STRUCT_BEGIN(TX_PANNABLEPARAMS, PannableParams)
+typedef struct {
     TX_BOOL            IsHandsFreeEnabled;             
     TX_PANNINGPROFILE  Profile;                        
     TX_REAL            PeakVelocity;                   
     TX_PANDIRECTION    PanDirectionsAvailable;         
-TX_STRUCT_END(TX_PANNABLEPARAMS, PannableParams)
+} TX_PANNABLEPARAMS;
 
 /*********************************************************************************************************************/
 
@@ -596,15 +610,15 @@ TX_STRUCT_END(TX_PANNABLEPARAMS, PannableParams)
   Struct for pannable pan event parameters.
    
   @field PanVelocityX:
-    The X velocity for the pan. In millimeters per second.
+    The X velocity for the pan. In pixels per second.
   
   @field PanVelocityY:
-    The Y velocity for the pan. In millimeters per second.
+    The Y velocity for the pan. In pixels per second.
  */
-TX_STRUCT_BEGIN(TX_PANNABLEPANEVENTPARAMS, PannablePanEventParams)
+typedef struct {
     TX_REAL PanVelocityX;
     TX_REAL PanVelocityY;
-TX_STRUCT_END(TX_PANNABLEPANEVENTPARAMS, PannablePanEventParams)
+} TX_PANNABLEPANEVENTPARAMS;
 
 /*********************************************************************************************************************/
 
@@ -612,19 +626,19 @@ TX_STRUCT_END(TX_PANNABLEPANEVENTPARAMS, PannablePanEventParams)
   Struct for pannable step event parameters.
    
   @field PanStepX:
-    The step length on the X axis in millimeters.
+    The step length on the X axis in pixels.
   
   @field PanStepY:    
-    The step length on the X axis in millimeters.
+    The step length on the X axis in pixels.
     
   @field PanStepDuration:    
     The amount of time in seconds during which the step should be performed.
  */
-TX_STRUCT_BEGIN(TX_PANNABLESTEPEVENTPARAMS, PannableStepEventParams)
+typedef struct {
     TX_REAL PanStepX;
     TX_REAL PanStepY;
     TX_REAL PanStepDuration;
-TX_STRUCT_END(TX_PANNABLESTEPEVENTPARAMS, PannableStepEventParams)
+} TX_PANNABLESTEPEVENTPARAMS;
 
 /*********************************************************************************************************************/
 
@@ -634,9 +648,9 @@ TX_STRUCT_END(TX_PANNABLESTEPEVENTPARAMS, PannableStepEventParams)
   @field HandsFreeEnabled:
     Specifies if hands free panning is enabled or not.
  */
-TX_STRUCT_BEGIN(TX_PANNABLEHANDSFREEEVENTPARAMS, PannableHandsFreeEventParams)
+typedef struct {
     TX_BOOL HandsFreeEnabled;
-TX_STRUCT_END(TX_PANNABLEHANDSFREEEVENTPARAMS, PannableHandsFreeEventParams)
+} TX_PANNABLEHANDSFREEEVENTPARAMS;
 
 /*********************************************************************************************************************/
 
@@ -645,10 +659,14 @@ TX_STRUCT_END(TX_PANNABLEHANDSFREEEVENTPARAMS, PannableHandsFreeEventParams)
    
   @field EnableTentativeFocus:
     Specifies if tentative focus should be enabled.
+  @field EnableSmallItemActivation:
+    Specifies if small item detection should be enabled.
+	For internal use only.
  */
-TX_STRUCT_BEGIN(TX_ACTIVATABLEPARAMS, ActivatableParams)
-    TX_BOOL EnableTentativeFocus;                       
-TX_STRUCT_END(TX_ACTIVATABLEPARAMS, ActivatableParams)
+typedef struct {
+    TX_BOOL EnableTentativeFocus;    
+    TX_BOOL EnableSmallItemDetection;
+} TX_ACTIVATABLEPARAMS;
 
 /*********************************************************************************************************************/
 
@@ -662,10 +680,10 @@ TX_STRUCT_END(TX_ACTIVATABLEPARAMS, ActivatableParams)
     Specifies the amount of time in milliseconds that the user has to look at an interactor before a gaze aware event
     is sent. This value only has an effect if the mode is set to TX_GAZEAWAREMODE_DELAYED.
  */
-TX_STRUCT_BEGIN(TX_GAZEAWAREPARAMS, GazeAwareParams)
+typedef struct {
     TX_GAZEAWAREMODE GazeAwareMode;
     TX_REAL DelayTime;                  
-TX_STRUCT_END(TX_GAZEAWAREPARAMS, GazeAwareParams)
+} TX_GAZEAWAREPARAMS;
 
 /*********************************************************************************************************************/
 
@@ -675,9 +693,9 @@ TX_STRUCT_END(TX_GAZEAWAREPARAMS, GazeAwareParams)
   @field HasGaze:
     Specifies if the interactor currently has gaze on it.
  */
-TX_STRUCT_BEGIN(TX_GAZEAWAREEVENTPARAMS, GazeAwareEventParams)
+typedef struct {
     TX_BOOL HasGaze;  
-TX_STRUCT_END(TX_GAZEAWAREEVENTPARAMS, GazeAwareEventParams)
+} TX_GAZEAWAREEVENTPARAMS;
 
 /*********************************************************************************************************************/
 
@@ -690,10 +708,10 @@ TX_STRUCT_END(TX_GAZEAWAREEVENTPARAMS, GazeAwareEventParams)
   @field HasActivationFocus:    
     Specifies if the interactor currently has activation focus.
  */
-TX_STRUCT_BEGIN(TX_ACTIVATIONFOCUSCHANGEDEVENTPARAMS, ActivationFocusChangedEventParams)
+typedef struct {
     TX_BOOL HasTentativeActivationFocus;              
     TX_BOOL HasActivationFocus;                       
-TX_STRUCT_END(TX_ACTIVATIONFOCUSCHANGEDEVENTPARAMS, ActivationFocusChangedEventParams)
+} TX_ACTIVATIONFOCUSCHANGEDEVENTPARAMS;
 
 /*********************************************************************************************************************/
 
@@ -703,9 +721,9 @@ TX_STRUCT_END(TX_ACTIVATIONFOCUSCHANGEDEVENTPARAMS, ActivationFocusChangedEventP
   @field GazePointDataMode:
     Specifies the gaze point data mode. See TX_GAZEPOINTDATAMODE.
  */
-TX_STRUCT_BEGIN(TX_GAZEPOINTDATAPARAMS, GazePointDataParams)
+typedef struct {
     TX_GAZEPOINTDATAMODE GazePointDataMode;          
-TX_STRUCT_END(TX_GAZEPOINTDATAPARAMS, GazePointDataParams)
+} TX_GAZEPOINTDATAPARAMS;
 
 /*********************************************************************************************************************/
     
@@ -715,9 +733,9 @@ TX_STRUCT_END(TX_GAZEPOINTDATAPARAMS, GazePointDataParams)
   @field FixationDataMode:
     Specifies the fixation data mode. See TX_FIXATIONDATAMODE.
  */
-TX_STRUCT_BEGIN(TX_FIXATIONDATAPARAMS, FixationDataParams)
+typedef struct {
     TX_FIXATIONDATAMODE FixationDataMode;       
-TX_STRUCT_END(TX_FIXATIONDATAPARAMS, FixationDataParams)
+} TX_FIXATIONDATAPARAMS;
 
 /*********************************************************************************************************************/
 
@@ -731,10 +749,10 @@ TX_STRUCT_END(TX_FIXATIONDATAPARAMS, FixationDataParams)
     The type of fixation event. See TX_FIXATIONDATAEVENTTYPE.
     
   @field Timestamp:
-    For TX_FIXATIONDATAEVENTTYPE_BEGIN, this is the time when the fixation started.
-    For TX_FIXATIONDATAEVENTTYPE_END, this is the time when the fixation ended.
+    For TX_FIXATIONDATAEVENTTYPE_BEGIN, this is the time when the fixation started, in milliseconds.
+    For TX_FIXATIONDATAEVENTTYPE_END, this is the time when the fixation ended, in milliseconds.
     For TX_FIXATIONDATAEVENTTYPE_DATA, the timestamp for the filtered gaze point provided within 
-    the current fixation, when the filter was applied.
+    the current fixation, when the filter was applied, in milliseconds.
     
   @field X:
     The current X coordinate of the fixation in pixels. For begin and end events will reflect where the fixation 
@@ -744,13 +762,13 @@ TX_STRUCT_END(TX_FIXATIONDATAPARAMS, FixationDataParams)
     The current Y coordinate of the fixation in pixels. For begin and end events will reflect where the fixation 
     began or ended.
  */
-TX_STRUCT_BEGIN(TX_FIXATIONDATAEVENTPARAMS, FixationDataEventParams)
+typedef struct {
     TX_FIXATIONDATAMODE FixationDataMode;
     TX_FIXATIONDATAEVENTTYPE EventType;
     TX_REAL Timestamp;
     TX_REAL X;       
     TX_REAL Y;
-TX_STRUCT_END(TX_FIXATIONDATAEVENTPARAMS, FixationDataEventParams)
+} TX_FIXATIONDATAEVENTPARAMS;
 
 /*********************************************************************************************************************/
 
@@ -761,8 +779,8 @@ TX_STRUCT_END(TX_FIXATIONDATAEVENTPARAMS, FixationDataEventParams)
     The gaze point data mode. See TX_GAZEPOINTDATAMODE.
     
   @field Timestamp:
-    For TX_GAZEPOINTDATAMODE_LIGHTLYFILTERED this is the point in time when the filter was applied.
-    For TX_GAZEPOINTDATAMODE_UNFILTERED this is the point in time time when gazepoint was captured.
+    For TX_GAZEPOINTDATAMODE_LIGHTLYFILTERED this is the point in time when the filter was applied, in milliseconds.
+    For TX_GAZEPOINTDATAMODE_UNFILTERED this is the point in time time when gazepoint was captured, in milliseconds.
     
   @field X:
     The X coordinate of the gaze point in pixels.
@@ -770,12 +788,12 @@ TX_STRUCT_END(TX_FIXATIONDATAEVENTPARAMS, FixationDataEventParams)
   @field Y:
     The Y coordinate of the gaze point in pixels.
  */
-TX_STRUCT_BEGIN(TX_GAZEPOINTDATAEVENTPARAMS, GazePointDataEventParams)
+typedef struct {
     TX_GAZEPOINTDATAMODE GazePointDataMode;
     TX_REAL Timestamp;
     TX_REAL X;       
     TX_REAL Y;
-TX_STRUCT_END(TX_GAZEPOINTDATAEVENTPARAMS, GazePointDataEventParams)
+} TX_GAZEPOINTDATAEVENTPARAMS;
 
 /*********************************************************************************************************************/
 
@@ -786,7 +804,7 @@ TX_STRUCT_END(TX_GAZEPOINTDATAEVENTPARAMS, GazePointDataEventParams)
   millimeters on each axis.
    
   @field Timestamp:
-    The point in time when the eye position was captured.
+    The point in time when the eye position was captured, in milliseconds.
     
   @field HasLeftEyePosition:
     Specifies if the data for the left eye is valid.
@@ -800,8 +818,17 @@ TX_STRUCT_END(TX_GAZEPOINTDATAEVENTPARAMS, GazePointDataEventParams)
   @field LeftEyeY:
     The Y coordinate of the left eye in millimiters.
     
-  @field LeftEyeY:
+  @field LeftEyeZ:
     The Z coordinate of the left eye in millimiters.
+
+  @field LeftEyeXNormalized:
+    The X coordinate of the left eye normalized in the track box.
+    
+  @field LeftEyeYNormalized:
+    The Y coordinate of the left eye normalized in the track box.
+    
+  @field LeftEyeZNormalized:
+    The Z coordinate of the left eye normalized in the track box.
     
   @field RightEyeX:
     The X coordinate of the right eye in millimiters.
@@ -811,18 +838,33 @@ TX_STRUCT_END(TX_GAZEPOINTDATAEVENTPARAMS, GazePointDataEventParams)
     
   @field RightEyeZ:
     The Z coordinate of the right eye in millimiters.
+
+  @field RightEyeXNormalized:
+    The X coordinate of the right eye normalized in the track box.
+    
+  @field RightEyeYNormalized:
+    The Y coordinate of the right eye normalized in the track box.
+    
+  @field RightEyeZNormalized:
+    The Z coordinate of the right eye normalized in the track box.
  */
-TX_STRUCT_BEGIN(TX_EYEPOSITIONDATAEVENTPARAMS, EyePositionDataEventParams)
+typedef struct {
     TX_REAL Timestamp;
     TX_BOOL HasLeftEyePosition;
     TX_BOOL HasRightEyePosition;
     TX_REAL LeftEyeX;
     TX_REAL LeftEyeY;
     TX_REAL LeftEyeZ;
+    TX_REAL LeftEyeXNormalized;
+    TX_REAL LeftEyeYNormalized;
+    TX_REAL LeftEyeZNormalized;
     TX_REAL RightEyeX;
     TX_REAL RightEyeY;
     TX_REAL RightEyeZ;
-TX_STRUCT_END(TX_EYEPOSITIONDATAEVENTPARAMS, EyePositionDataEventParams)
+    TX_REAL RightEyeXNormalized;
+    TX_REAL RightEyeYNormalized;
+    TX_REAL RightEyeZNormalized;
+} TX_EYEPOSITIONDATAEVENTPARAMS;
 
 /*********************************************************************************************************************/
 
@@ -847,14 +889,14 @@ TX_STRUCT_END(TX_EYEPOSITIONDATAEVENTPARAMS, EyePositionDataEventParams)
   @field UserParam:
     User parameter which will be passed to the functions.
  */
-TX_STRUCT_BEGIN(TX_THREADINGMODEL, ThreadingModel)
+typedef struct {
     TX_CREATETHREADCALLBACK       CreateThread;         
     TX_GETCURRENTTHREADIDCALLBACK GetCurrentThreadId;   
     TX_JOINTHREADCALLBACK         JoinThread;           
     TX_DELETETHREADCALLBACK       DeleteThread;         
-	TX_DELETEMODELCALLBACK        DeleteModel;
+    TX_DELETEMODELCALLBACK        DeleteModel;
     TX_USERPARAM                  UserParam;            
-TX_STRUCT_END(TX_THREADINGMODEL, ThreadingModel)
+} TX_THREADINGMODEL;
 
 /*********************************************************************************************************************/
 
@@ -873,12 +915,12 @@ TX_STRUCT_END(TX_THREADINGMODEL, ThreadingModel)
   @field UserParam:
     User parameter which will be passed to the custom log function.
  */
-TX_STRUCT_BEGIN(TX_LOGGINGMODEL, LoggingModel)
+typedef struct {
     TX_LOGTARGET Targets;
     TX_LOGCALLBACK Log;        
-	TX_DELETEMODELCALLBACK DeleteModel;
+    TX_DELETEMODELCALLBACK DeleteModel;
     TX_USERPARAM UserParam;    
-TX_STRUCT_END(TX_LOGGINGMODEL, LoggingModel)
+} TX_LOGGINGMODEL;
     
 /*********************************************************************************************************************/
 
@@ -897,15 +939,15 @@ TX_STRUCT_END(TX_LOGGINGMODEL, LoggingModel)
   @field UserParam:
     User parameter which will be passed to the custom schedule function.
  */
-TX_STRUCT_BEGIN(TX_SCHEDULINGMODEL, SchedulingModel)
+typedef struct {
     TX_SCHEDULINGMODE Mode;
     TX_SCHEDULEJOBCALLBACK ScheduleJob;        
-	TX_DELETEMODELCALLBACK DeleteModel;
+    TX_DELETEMODELCALLBACK DeleteModel;
     TX_USERPARAM UserParam;    
-TX_STRUCT_END(TX_SCHEDULINGMODEL, SchedulingModel)
+} TX_SCHEDULINGMODEL;
     
 /*********************************************************************************************************************/
 
-#endif /* !defined(__TOBII_TX_TYPES__H__) */
+#endif /* !defined(__TOBII_TX_CLIENT_TYPES__H__) */
 
 /*********************************************************************************************************************/

@@ -1,25 +1,29 @@
 /*********************************************************************************************************************
  * Copyright 2013-2014 Tobii Technology AB. All rights reserved.
- * InteractionQuery.hpp
+ * Command.hpp
  *********************************************************************************************************************/
 
-#if !defined(__TOBII_TX_CLIENT_CPPBINDINGS_INTERACTIONQUERY__HPP__)
-#define __TOBII_TX_CLIENT_CPPBINDINGS_INTERACTIONQUERY__HPP__
+#if !defined(__TOBII_TX_CLIENT_CPPBINDINGS_Command__HPP__)
+#define __TOBII_TX_CLIENT_CPPBINDINGS_Command__HPP__
 
 /*********************************************************************************************************************/
 
 TX_NAMESPACE_BEGIN
-	
+
 /*********************************************************************************************************************/
 
-class InteractionQuery :
+class Command :
 	public InteractionObject
 {
-public:	
-	InteractionQuery(const std::shared_ptr<const InteractionContext>& spContext, TX_HANDLE hQuery);
-	   
-    std::shared_ptr<InteractionBounds> GetBounds() const;
-    std::vector<std::string> GetWindowIds() const;
+public:
+	Command(const std::shared_ptr<const Context>& spContext, TX_HANDLE hCommand);
+
+	TX_COMMANDTYPE GetType() const;
+	void ExecuteAsync(AsyncDataHandler fnHandler);
+	
+public:
+	std::shared_ptr<InteractionObject> GetData() const;
+	void SetData(const std::shared_ptr<InteractionObject>& spData);
 };
 
 /*********************************************************************************************************************/
@@ -29,6 +33,6 @@ TX_NAMESPACE_END
 /*********************************************************************************************************************/
 
 
-#endif // !defined(__TOBII_TX_CLIENT_CPPBINDINGS_INTERACTIONQUERY__HPP__)
+#endif // !defined(__TOBII_TX_CLIENT_CPPBINDINGS_Command__HPP__)
 
 /*********************************************************************************************************************/

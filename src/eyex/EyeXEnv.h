@@ -1,23 +1,23 @@
 /*********************************************************************************************************************
  * Copyright 2013-2014 Tobii Technology AB. All rights reserved.
- * EyeXSystem.h
+ * EyeXEnv.h
  *********************************************************************************************************************/
 
-#if !defined(__TOBII_TX_SYSTEM_API__H__)
-#define __TOBII_TX_SYSTEM_API__H__
+#if !defined(__TOBII_TX_ENV_API__H__)
+#define __TOBII_TX_ENV_API__H__
 
 /*********************************************************************************************************************/
 
 /**
-  txInitializeSystem
+  txInitializeEyeX
 
-  Initializes the Tobii EyeX interaction system.
-  This function must be called prior to any other in the API, except txEnableMonoThreading.
+  Initializes the Tobii EyeX client environment.
+  This function must be called prior to any other in the API, except txGetEyeXAvailability and txEnableMonoCallbacks.
   A client can choose to override the default memory model, threading model and logging model by supplying custom models
   to this function.
 
   @param flags [in]:
-    Specifies which system components to override.
+    Specifies which components to override.
     
   @param pLoggingModel [in]:
     A pointer to a TX_LOGGINGMODEL which will override the default model.
@@ -25,65 +25,94 @@
         
   @param pThreadingModel [in]:
     A pointer to a TX_THREADINGMODEL which will override the default model.
-    This argument can be NULL to use the default threading model.
+    This argument can be NULL to use the default threading model. Any 
+    non-NULL value is for internal use only.
 
   @param pSchedulingModel [in]:
 	A pointer to a TX_SCHEDULINGMODEL which will override the default model.
-	This argument can be NULL to use the default scheduling model.
+	This argument can be NULL to use the default scheduling model. Any 
+    non-NULL value is for internal use only.
+
+  @param pMemoryModel [in]:
+	Reserved for future use.
 
   @return 
-    TX_RESULT_OK: The system was successfully initialized.
+    TX_RESULT_OK: The client environment was successfully initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
-    TX_RESULT_SYSTEMALREADYINITIALIZED: The system is already initialized.
+    TX_RESULT_EYEXALREADYINITIALIZED: The EyeX client environment is already initialized.
  */
-TX_API_FUNCTION(InitializeSystem,(
-    TX_SYSTEMCOMPONENTOVERRIDEFLAGS flags,
-    TX_IN_PARAM(TX_LOGGINGMODEL) pLoggingModel,
-    TX_IN_PARAM(TX_THREADINGMODEL) pThreadingModel,
-	TX_IN_PARAM(TX_SCHEDULINGMODEL) pSchedulingModel
-    ));
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txInitializeEyeX(
+    TX_EYEXCOMPONENTOVERRIDEFLAGS flags,
+    const TX_LOGGINGMODEL* pLoggingModel,
+    const TX_THREADINGMODEL* pThreadingModel,
+	const TX_SCHEDULINGMODEL* pSchedulingModel,
+    void* pMemoryModel
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *InitializeEyeXHook)(
+    TX_EYEXCOMPONENTOVERRIDEFLAGS flags,
+    const TX_LOGGINGMODEL* pLoggingModel,
+    const TX_THREADINGMODEL* pThreadingModel,
+	const TX_SCHEDULINGMODEL* pSchedulingModel,
+    void* pMemoryModel
+    );
+
 
 /*********************************************************************************************************************/
 
 /**
-  txUninitializeSystem
+  txUninitializeEyeX
 
-  Uninitializes the system.
+  Uninitializes the EyeX client environment.
   If any context is still active this call will fail.
   
   @return 
-    TX_RESULT_OK: The system was successfully uninitialized.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
-    TX_RESULT_SYSTEMSTILLINUSE: The system is still in use.
+    TX_RESULT_OK: The client environment was successfully uninitialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The client environment is not initialized.
+    TX_RESULT_EYEXSTILLINUSE: The EyeX client environment is still in use.
  */
-TX_API_FUNCTION(UninitializeSystem, ());
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txUninitializeEyeX();
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *UninitializeEyeXHook)();
+
 
 /*********************************************************************************************************************/
 
 /**
-  txIsSystemInitialized
+  txIsEyeXInitialized
 
-  Checks if the system has been initialized.
+  Checks if the EyeX client environment has been initialized.
   
   @param pInitialized [out]: 
-    A pointer to a TX_BOOL which will be set to true if the system is initialized and false otherwise.
+    A pointer to a TX_BOOL which will be set to true if the environment is initialized and false otherwise.
     Must not be NULL.
 
   @return 
     TX_RESULT_OK: The operation was successful.
  */
-TX_API_FUNCTION(IsSystemInitialized, (
-    TX_OUT_PARAM(TX_BOOL) pInitialized
-    ));
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txIsEyeXInitialized(
+    TX_BOOL* pInitialized
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *IsEyeXInitializedHook)(
+    TX_BOOL* pInitialized
+    );
+
 
 /*********************************************************************************************************************/
 
 /**
   txWriteLogMessage
 
-  Writes a message using the internal logging system. 
+  Writes a message using the internal logging model. 
   This method is typically not intended for end users but rather for the different language bindings to have a common
-  way of utilizing the logging system.
+  way of utilizing the logging model.
 
   @param level [in]: 
     The log level for this message.
@@ -96,14 +125,23 @@ TX_API_FUNCTION(IsSystemInitialized, (
 
   @return
     TX_RESULT_OK: The message was successfully written to the log.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
+    TX_RESULT_EYEXNOTINITIALIZED: The EyeX client environment is not initialized.
     TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
   */
-TX_API_FUNCTION(WriteLogMessage,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txWriteLogMessage(
     TX_LOGLEVEL level,
     TX_CONSTSTRING scope,
     TX_CONSTSTRING message
-    ));
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *WriteLogMessageHook)(
+    TX_LOGLEVEL level,
+    TX_CONSTSTRING scope,
+    TX_CONSTSTRING message
+    );
+
 
 /*********************************************************************************************************************/
 /**
@@ -122,10 +160,18 @@ TX_API_FUNCTION(WriteLogMessage,(
   @return 
     TX_RESULT_OK: The invalid argument handler was successful set.
  */
-TX_API_FUNCTION(SetInvalidArgumentHandler,(
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txSetInvalidArgumentHandler(
     TX_INVALIDARGUMENTCALLBACK handler,
     TX_USERPARAM userParam
-    ));
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *SetInvalidArgumentHandlerHook)(
+    TX_INVALIDARGUMENTCALLBACK handler,
+    TX_USERPARAM userParam
+    );
+
 
 /*********************************************************************************************************************/
 /**
@@ -147,46 +193,44 @@ TX_API_FUNCTION(SetInvalidArgumentHandler,(
   @return 
     TX_RESULT_OK: The mono callbacks were successfully enabled.
     TX_RESULT_INVALIDARGUMENT: The Mono module name could not be used to resolve the necessary Mono functions.
- */
-TX_API_FUNCTION(EnableMonoCallbacks,(
+  */
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txEnableMonoCallbacks(
 	TX_CONSTSTRING monoModuleName
-    ));
+    );
+TX_C_END
+
+typedef TX_RESULT (TX_CALLCONVENTION *EnableMonoCallbacksHook)(
+	TX_CONSTSTRING monoModuleName
+    );
+
 
 /*********************************************************************************************************************/
 /**
-  txGetServerVersionAsync
+  txGetEyeXAvailability
 
-  Gets the server version asynchronously.
+  Gets the availability of the EyeX Engine.
 
-  @param hContext [in]: 
-    A TX_CONTEXTHANDLE to the context on which to create the command.
-    Must not be TX_EMPTY_HANDLE.
-	
-  @param completionHandler [in]:
-    The TX_ASYNCDATACALLBACK that will handle the version request result. The Data property bag
-    will contain the servers major, minor and build version.
-    	
-	That handle to the async data must NOT be released.
+  @param pEyeXAvailability [out]:
+    The availability of EyeX Engine.
+  
+  @return
+    TX_RESULT_OK: The status was fetched successfully.
+	TX_RESULT_INVALIDARGUMENT: An invalid argument was supplied.
+  */
+TX_C_BEGIN
+TX_API TX_RESULT TX_CALLCONVENTION txGetEyeXAvailability(
+	TX_EYEXAVAILABILITY* pEyeXAvailability
+	);
+TX_C_END
 
-  @param userParam [in]:
-    A TX_USERPARAM which will be provided as a parameter to the completion callback. 
-    Can be NULL.
+typedef TX_RESULT (TX_CALLCONVENTION *GetEyeXAvailabilityHook)(
+	TX_EYEXAVAILABILITY* pEyeXAvailability
+	);
 
-  @return 
-    TX_RESULT_OK: The request was sent successfully.
-    TX_RESULT_SYSTEMNOTINITIALIZED: The system is not initialized.
-    TX_RESULT_INVALIDARGUMENT: An invalid argument was passed to the function.
-    TX_RESULT_INVALIDCONTEXT: The handle to the context was invalid.
- */
-TX_API_FUNCTION(GetServerVersionAsync,(
-	TX_CONTEXTHANDLE hContext,
-    TX_ASYNCDATACALLBACK completionHandler,
-    TX_USERPARAM userParam
-    ));
 
 /*********************************************************************************************************************/
 
-
-#endif /* !defined(__TOBII_TX_SYSTEM_API__H__) */
+#endif /* !defined(__TOBII_TX_ENV_API__H__) */
 
 /*********************************************************************************************************************/

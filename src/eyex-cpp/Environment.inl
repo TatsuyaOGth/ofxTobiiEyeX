@@ -1,10 +1,10 @@
 /*********************************************************************************************************************
  * Copyright 2013-2014 Tobii Technology AB. All rights reserved.
- * InteractionEvent.inl
+ * Environment.inl
  *********************************************************************************************************************/
 
-#if !defined(__TOBII_TX_CLIENT_CPPBINDINGS_INTERACTIONEVENT__INL__)
-#define __TOBII_TX_CLIENT_CPPBINDINGS_INTERACTIONEVENT__INL__
+#if !defined(__TOBII_TX_CLIENT_CPPBINDINGS_ENVIRONMENT__INL__)
+#define __TOBII_TX_CLIENT_CPPBINDINGS_ENVIRONMENT__INL__
 
 /*********************************************************************************************************************/
 
@@ -12,44 +12,42 @@ TX_NAMESPACE_BEGIN
 
 /*********************************************************************************************************************/
 
-inline InteractionEvent::InteractionEvent(const std::shared_ptr<const Context>& spContext, TX_HANDLE hEvent)
-: InteractionObject(spContext, hEvent)
-{}
-
-/*********************************************************************************************************************/
-	   
-inline std::string InteractionEvent::GetInteractorId() const        
-{	
-    return GetString(txGetEventInteractorId, _hObject);
-}
-
-/*********************************************************************************************************************/
-
-inline std::vector<std::shared_ptr<Behavior>> InteractionEvent::GetBehaviors() const
-{	   
-	std::vector<Tx::Utils::ScopedHandle> behaviorHandles;
-    TX_VALIDATE(Tx::Utils::GetBufferData(behaviorHandles, txGetEventBehaviors, _hObject));
-	
-    std::vector<std::shared_ptr<Behavior>> behaviors;
-	for(auto& hBehavior : behaviorHandles)
-	{
-		auto spBehavior = _spContext->CreateObject<Behavior>(hBehavior);
-		behaviors.push_back(spBehavior);
-	}
-
-	return behaviors;
-}
-
-/*********************************************************************************************************************/
-
-inline bool InteractionEvent::TryGetBehavior(std::shared_ptr<Behavior>* pspBehavior, TX_BEHAVIORTYPE behaviorType) const
+inline Environment::Environment(
+	TX_EYEXCOMPONENTOVERRIDEFLAGS flags,
+	TX_LOGGINGMODEL* pLoggingModel,
+	TX_THREADINGMODEL* pThreadingModel,
+	TX_SCHEDULINGMODEL* pSchedulingModel,
+    void* pMemoryModel)
 {
-	Tx::Utils::ScopedHandle hBehavior;
-	if(!TX_VALIDATE(txGetEventBehavior(_hObject, &hBehavior, behaviorType), TX_RESULT_NOTFOUND))
-		return false;
+    TX_VALIDATE(txInitializeEyeX(flags, pLoggingModel, pThreadingModel, pSchedulingModel, pMemoryModel));
+}
 
-	*pspBehavior = _spContext->CreateObject<Behavior>(hBehavior);
-	return true;
+/*********************************************************************************************************************/
+
+inline Environment::~Environment()
+{
+	TX_VALIDATE(txUninitializeEyeX());
+}
+
+/*********************************************************************************************************************/
+
+inline std::shared_ptr<Environment> Environment::Initialize(
+	TX_EYEXCOMPONENTOVERRIDEFLAGS flags,
+	TX_LOGGINGMODEL* pLoggingModel,
+	TX_THREADINGMODEL* pThreadingModel,
+	TX_SCHEDULINGMODEL* pSchedulingModel,
+    void* pMemoryModel)
+{
+	return std::make_shared<Environment>(flags, pLoggingModel, pThreadingModel, pSchedulingModel, pMemoryModel);
+}
+
+/*********************************************************************************************************************/
+
+inline TX_EYEXAVAILABILITY Environment::GetEyeXAvailability()
+{
+	TX_EYEXAVAILABILITY availability;
+	TX_VALIDATE(txGetEyeXAvailability(&availability));
+	return availability;
 }
 
 /*********************************************************************************************************************/
@@ -58,6 +56,6 @@ TX_NAMESPACE_END
 
 /*********************************************************************************************************************/
 
-#endif // !defined(__TOBII_TX_CLIENT_CPPBINDINGS_INTERACTIONEVENT__INL__)
+#endif // !defined(__TOBII_TX_CLIENT_CPPBINDINGS_ENVIRONMENT__INL__)
 
 /*********************************************************************************************************************/

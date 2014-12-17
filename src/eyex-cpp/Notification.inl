@@ -1,10 +1,10 @@
 /*********************************************************************************************************************
  * Copyright 2013-2014 Tobii Technology AB. All rights reserved.
- * InteractionNotification.inl
+ * Notification.inl
  *********************************************************************************************************************/
 
-#if !defined(__TOBII_TX_CLIENT_CPPBINDINGS_INTERACTIONNOTIFICATION__INL__)
-#define __TOBII_TX_CLIENT_CPPBINDINGS_INTERACTIONNOTIFICATION__INL__
+#if !defined(__TOBII_TX_CLIENT_CPPBINDINGS_Notification__INL__)
+#define __TOBII_TX_CLIENT_CPPBINDINGS_Notification__INL__
 
 /*********************************************************************************************************************/
 
@@ -12,13 +12,13 @@ TX_NAMESPACE_BEGIN
 	
 /*********************************************************************************************************************/
 
-inline InteractionNotification::InteractionNotification(const std::shared_ptr<const InteractionContext>& spContext, TX_HANDLE hNotification) 
+inline Notification::Notification(const std::shared_ptr<const Context>& spContext, TX_HANDLE hNotification) 
 : InteractionObject(spContext, hNotification)
 { }
 
 /*********************************************************************************************************************/
 	              
-inline TX_NOTIFICATIONTYPE InteractionNotification::GetNotificationType() const
+inline TX_NOTIFICATIONTYPE Notification::GetNotificationType() const
 {
     TX_NOTIFICATIONTYPE notificationType;
     TX_VALIDATE(txGetNotificationType(_hObject, &notificationType));
@@ -27,7 +27,7 @@ inline TX_NOTIFICATIONTYPE InteractionNotification::GetNotificationType() const
 
 /*********************************************************************************************************************/
 
-inline std::shared_ptr<InteractionObject> InteractionNotification::GetData() const
+inline std::shared_ptr<InteractionObject> Notification::GetData() const
 {
     Tx::Utils::ScopedHandle hData;
     if(!TX_VALIDATE(txGetNotificationData(_hObject, &hData), TX_RESULT_NOTFOUND))
@@ -44,6 +44,6 @@ TX_NAMESPACE_END
 /*********************************************************************************************************************/
 
 
-#endif // !defined(__TOBII_TX_CLIENT_CPPBINDINGS_INTERACTIONNOTIFICATION__INL__)
+#endif // !defined(__TOBII_TX_CLIENT_CPPBINDINGS_Notification__INL__)
 
 /*********************************************************************************************************************/

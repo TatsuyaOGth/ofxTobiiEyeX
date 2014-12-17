@@ -1,10 +1,10 @@
 /*********************************************************************************************************************
  * Copyright 2013-2014 Tobii Technology AB. All rights reserved.
- * InteractionEvent.hpp
+ * Notification.hpp
  *********************************************************************************************************************/
 
-#if !defined(__TOBII_TX_CLIENT_CPPBINDINGS_INTERACTIONEVENT__HPP__)
-#define __TOBII_TX_CLIENT_CPPBINDINGS_INTERACTIONEVENT__HPP__
+#if !defined(__TOBII_TX_CLIENT_CPPBINDINGS_Notification__HPP__)
+#define __TOBII_TX_CLIENT_CPPBINDINGS_Notification__HPP__
 
 /*********************************************************************************************************************/
 
@@ -12,15 +12,14 @@ TX_NAMESPACE_BEGIN
 	
 /*********************************************************************************************************************/
 
-class InteractionEvent :
+class Notification :
 	public InteractionObject
 {
 public:
-	InteractionEvent(const std::shared_ptr<const Context>& spContext, TX_HANDLE hEvent);
-	   
-    std::string GetInteractorId() const;        
-    std::vector<std::shared_ptr<Behavior>> GetBehaviors() const;
-	bool TryGetBehavior(std::shared_ptr<Behavior>* pspBehavior, TX_BEHAVIORTYPE behaviorType) const;
+	Notification(const std::shared_ptr<const Context>& spContext, TX_HANDLE hNotification);
+	              
+    TX_NOTIFICATIONTYPE GetNotificationType() const;
+    std::shared_ptr<InteractionObject> GetData() const;
 };
 
 /*********************************************************************************************************************/
@@ -30,6 +29,6 @@ TX_NAMESPACE_END
 /*********************************************************************************************************************/
 
 
-#endif // !defined(__TOBII_TX_CLIENT_CPPBINDINGS_INTERACTIONEVENT__HPP__)
+#endif // !defined(__TOBII_TX_CLIENT_CPPBINDINGS_Notification__HPP__)
 
 /*********************************************************************************************************************/
