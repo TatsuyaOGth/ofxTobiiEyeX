@@ -1,11 +1,8 @@
 #ifndef __OFX_TOBII_EYEX__
 #define __OFX_TOBII_EYEX__
 
-//#include <Windows.h>
 #include "ofMain.h"
-
-#include "eyex/EyeX.h"
-#pragma comment (lib, "Tobii.EyeX.Client.lib")
+#include "EyeX.h"
 
 class ofxTobiiEyeX
 {
