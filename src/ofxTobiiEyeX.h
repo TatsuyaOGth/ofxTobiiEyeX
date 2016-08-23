@@ -38,6 +38,23 @@ namespace ofxTobiiEyeX
 		inline const TX_GAZEPOINTDATAEVENTPARAMS& getGazePointParams() { return m_GazePointDataEventParams; }
 		inline ofPoint getGazePoint() { return ofPoint(m_GazePointDataEventParams.X, m_GazePointDataEventParams.Y); }
 	};
+
+	class EyePosition : public BaseTobiiEyeXApi
+	{
+	protected:
+		TX_EYEPOSITIONDATAEVENTPARAMS m_EyePositionDataEventParams;
+
+	public:
+		EyePosition();
+		virtual ~EyePosition();
+
+		void update();
+		bool open(TX_CONSTSTRING InstractorId);
+		bool open();
+		bool close();
+
+		inline TX_EYEPOSITIONDATAEVENTPARAMS& getEyePosition() { return m_EyePositionDataEventParams; }
+	};
 }
 
 #endif

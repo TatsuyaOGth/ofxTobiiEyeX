@@ -13,4 +13,5 @@ class ofApp : public ofBaseApp{
 		void exit();
 
 		ofxTobiiEyeX::GazePoint mGazePoint;
+		ofxTobiiEyeX::EyePosition mEyePosition;
 };

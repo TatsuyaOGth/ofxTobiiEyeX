@@ -14,11 +14,6 @@ TX_EYEPOSITIONDATAEVENTPARAMS g_EyePositionDataEventParams;
 TX_FIXATIONDATAEVENTPARAMS g_FixationDataEventParams;
 
 
-
-
-
-
-
 /*
  * Callback function invoked when a snapshot has been committed.
  */
@@ -119,6 +114,11 @@ void TX_CALLCONVENTION HandleEvent(TX_CONSTHANDLE hAsyncData, TX_USERPARAM userP
 		txReleaseObject(&hBehavior);
 	}
 
+	if (txGetEventBehavior(hEvent, &hBehavior, TX_BEHAVIORTYPE_EYEPOSITIONDATA) == TX_RESULT_OK) {
+		OnEyePositionDataEvent(hBehavior);
+		txReleaseObject(&hBehavior);
+	}
+
 	txReleaseObject(&hEvent);
 }
 
@@ -188,6 +188,7 @@ namespace ofxTobiiEyeX
 
 	bool GazePoint::open()
 	{
+		// open device with default parameters.
 		TX_STRING id = "ofxTobiiEyeX_GazePoint";
 		TX_GAZEPOINTDATAPARAMS params = { TX_GAZEPOINTDATAMODE_LIGHTLYFILTERED };
 		return open(id, params);
@@ -204,7 +205,80 @@ namespace ofxTobiiEyeX
 		success &= txReleaseContext(&hContext) == TX_RESULT_OK;
 		success &= txUninitializeEyeX() == TX_RESULT_OK;
 		if (!success) {
-			ofLogError(smAddonName, "EyeX could not be shut down cleanly. Did you remember to release all handles?\n");
+			ofLogError(smAddonName, "EyeX could not be shut down cleanly. Did you remember to release all handles?");
+		}
+		return success;
+	}
+
+	EyePosition::EyePosition()
+	{
+	}
+
+	EyePosition::~EyePosition()
+	{
+		if (hContext != TX_EMPTY_HANDLE) close();
+	}
+
+	void EyePosition::update()
+	{
+		// copy event params to memver values.
+		m_EyePositionDataEventParams = g_EyePositionDataEventParams;
+	}
+
+	bool EyePosition::open(TX_CONSTSTRING InteractorId)
+	{
+		hContext = TX_EMPTY_HANDLE;
+		TX_TICKET hConnectionStateChangedTicket = TX_INVALID_TICKET;
+		TX_TICKET hEventHandlerTicket = TX_INVALID_TICKET;
+		BOOL success;
+
+		// initialize and enable the context that is our link to the EyeX Engine.
+		success = txInitializeEyeX(TX_EYEXCOMPONENTOVERRIDEFLAG_NONE, NULL, NULL, NULL, NULL) == TX_RESULT_OK;
+		success &= txCreateContext(&hContext, TX_FALSE) == TX_RESULT_OK;
+
+		// Initializes hInteractorSnapshot with an interactor that has the Eye Position behavior.
+		TX_HANDLE hInteractor = TX_EMPTY_HANDLE;
+		TX_HANDLE hBehaviorWithoutParameters = TX_EMPTY_HANDLE;
+		success = txCreateGlobalInteractorSnapshot(
+			hContext,
+			InteractorId,
+			&hGlobalInteractorSnapshot,
+			&hInteractor) == TX_RESULT_OK;
+		success &= txCreateInteractorBehavior(hInteractor, &hBehaviorWithoutParameters, TX_BEHAVIORTYPE_EYEPOSITIONDATA) == TX_RESULT_OK;
+		txReleaseObject(&hInteractor);
+
+		success &= txRegisterConnectionStateChangedHandler(hContext, &hConnectionStateChangedTicket, OnEngineConnectionStateChanged, hGlobalInteractorSnapshot) == TX_RESULT_OK;
+		success &= txRegisterEventHandler(hContext, &hEventHandlerTicket, HandleEvent, NULL) == TX_RESULT_OK;
+		success &= txEnableConnection(hContext) == TX_RESULT_OK;
+
+		if (success) {
+			ofLogNotice(smAddonName, "Initialization was successful.");
+		}
+		else {
+			ofLogError(smAddonName, "Initialization failed.");
+		}
+		return success;
+	}
+
+	bool EyePosition::open()
+	{
+		// open device with default parameters.
+		TX_STRING id = "ofxTobiiEyeX_EyePosition";
+		return open(id);
+	}
+
+	bool EyePosition::close()
+	{
+		BOOL success;
+
+		// disable and delete the context.
+		txDisableConnection(hContext);
+		txReleaseObject(&hGlobalInteractorSnapshot);
+		success = txShutdownContext(hContext, TX_CLEANUPTIMEOUT_DEFAULT, TX_FALSE) == TX_RESULT_OK;
+		success &= txReleaseContext(&hContext) == TX_RESULT_OK;
+		success &= txUninitializeEyeX() == TX_RESULT_OK;
+		if (!success) {
+			ofLogError(smAddonName, "EyeX could not be shut down cleanly. Did you remember to release all handles?");
 		}
 		return success;
 	}
