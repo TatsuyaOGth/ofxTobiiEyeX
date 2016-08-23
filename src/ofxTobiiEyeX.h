@@ -4,48 +4,40 @@
 #include "ofMain.h"
 #include "EyeX.h"
 
-class ofxTobiiEyeX
+namespace ofxTobiiEyeX
 {
-public:
-	static ofPoint smLeftEye;
-	static ofPoint smRightEye;
-	static ofPoint smLeftEyeNorm;
-	static ofPoint smRightEyeNorm;
-	static ofPoint smGaze;
-	static float smEyeXTimestamp;
-	static bool smPresent;
+	class BaseTobiiEyeXApi
+	{
+	protected:
+		TX_CONTEXTHANDLE hContext;
+		TX_HANDLE hGlobalInteractorSnapshot;
 
-public:
-	ofxTobiiEyeX(bool start = false);
-	virtual ~ofxTobiiEyeX();
+	public:
+		BaseTobiiEyeXApi();
+		virtual ~BaseTobiiEyeXApi();
 
-	bool open();
-	bool close();
+		virtual void update() = 0;
+		virtual bool open() = 0;
+		virtual bool close() = 0;
+	};
 
-	ofPoint	& getLeftEyePosition()	{ return smLeftEye; }
-	ofPoint & getRightEyePosition()	{ return smRightEye; }
-	float getLeftEyePositionX()		{ return smLeftEye.x; }
-	float getLeftEyePositionY()		{ return smLeftEye.y; }
-	float getLeftEyePositionZ()		{ return smLeftEye.z; }
-	float getRightEyePositionX()	{ return smRightEye.x; }
-	float getRightEyePositionY()	{ return smRightEye.y; }
-	float getRightEyePositionZ()	{ return smRightEye.z; }
+	class GazePoint : public BaseTobiiEyeXApi
+	{
+	protected:
+		TX_GAZEPOINTDATAEVENTPARAMS m_GazePointDataEventParams;
 
-	ofPoint	& getLeftEyePosNorm()	{ return smLeftEyeNorm; }
-	ofPoint & getRightEyePosNorm()	{ return smRightEyeNorm; }
-	float getLeftEyePositionXNorm()		{ return smLeftEyeNorm.x; }
-	float getLeftEyePositionYNorm()		{ return smLeftEyeNorm.y; }
-	float getLeftEyePositionZNorm()		{ return smLeftEyeNorm.z; }
-	float getRightEyePositionXNorm()	{ return smRightEyeNorm.x; }
-	float getRightEyePositionYNorm()	{ return smRightEyeNorm.y; }
-	float getRightEyePositionZNorm()	{ return smRightEyeNorm.z; }
+	public:
+		GazePoint();
+		virtual ~GazePoint();
 
-	ofPoint & getGaze()	{ return smGaze; }
-	float	getGazeX()	{ return smGaze.x; }
-	float	getGazeY()	{ return smGaze.y; }
+		void update();
+		bool open(TX_CONSTSTRING InstractorId, TX_GAZEPOINTDATAPARAMS params);
+		bool open();
+		bool close();
 
-	float	getEyeXTimestamp()	{ return smEyeXTimestamp; }
-	bool	getPresent()		{ return smPresent; }
-};
+		inline const TX_GAZEPOINTDATAEVENTPARAMS& getGazePointParams() { return m_GazePointDataEventParams; }
+		inline ofPoint getGazePoint() { return ofPoint(m_GazePointDataEventParams.X, m_GazePointDataEventParams.Y); }
+	};
+}
 
 #endif

@@ -4,23 +4,22 @@
 void ofApp::setup(){
 	ofSetCircleResolution(60);
 
-	bool res = tx.open();
-	if (!res) OF_EXIT_APP(-1);
+	bool res = mGazePoint.open();
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
 
+	mGazePoint.update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
 	ofBackground(30);
 
-	//cout << "x: " << x << " y: " << y << endl;
-	//printf("\r [x %f] [y %f]", x, y);
+	ofDrawCircle(mGazePoint.getGazePoint(), 20);
 
-	ofSetColor(255);
+	/*ofSetColor(255);
 	ofCircle(
 		tx.getLeftEyePositionXNorm() * ofGetWidth(),
 		tx.getLeftEyePositionYNorm() * ofGetHeight(),
@@ -43,9 +42,14 @@ void ofApp::draw(){
 	ss << "Output information aboud your gaze position" << endl;
 	ss << "- Gaze position: " << tx.getGaze() << endl;
 	ofSetColor(255);
-	ofDrawBitmapString(ss.str(), 20, 20);
+	ofDrawBitmapString(ss.str(), 20, 20);*/
+}
+
+void ofApp::keyPressed(int key)
+{
+	if (key == 'f') ofToggleFullscreen();
 }
 
 void ofApp::exit(){
-	tx.close();
+	mGazePoint.close();
 }

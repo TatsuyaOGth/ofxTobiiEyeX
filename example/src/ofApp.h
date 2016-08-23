@@ -9,7 +9,8 @@ class ofApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
+		void keyPressed(int key);
 		void exit();
 
-	ofxTobiiEyeX tx;
+		ofxTobiiEyeX::GazePoint mGazePoint;
 };
