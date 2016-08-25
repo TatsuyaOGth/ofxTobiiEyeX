@@ -4,15 +4,21 @@
 void ofApp::setup(){
 	ofSetCircleResolution(60);
 
-	mGazePoint.open();
-	mEyePosition.open();
+	//mGazePoint.open();
+	//mEyePosition.open();
+	//mFixation.open();
+
+	mEyeX.setup();
+	mEyeX.registerGazePointEventHandler("TestGazePoint", TX_GAZEPOINTDATAMODE_LIGHTLYFILTERED);
+	mEyeX.registerEyePositionEventHandler("TestEyePosition");
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
 
-	mGazePoint.update();
-	mEyePosition.update();
+	//mGazePoint.update();
+	//mEyePosition.update();
+	//mFixation.update();
 }
 
 //--------------------------------------------------------------
@@ -21,24 +27,30 @@ void ofApp::draw(){
 
 	// Draw eye position
 	ofSetColor(0, 255, 0);
-	if (mEyePosition.getEyePosition().HasLeftEyePosition)
+	if (mEyeX.hasLeftEye())
 	{
+		ofPoint p = mEyeX.getLeftEyeNormalized();
 		ofDrawCircle(
-			mEyePosition.getEyePosition().LeftEyeXNormalized * ofGetWidth(),
-			mEyePosition.getEyePosition().LeftEyeYNormalized * ofGetHeight(),
-			abs(mEyePosition.getEyePosition().LeftEyeZNormalized - 1) * 80);
+			p.x * ofGetWidth(),
+			p.y * ofGetHeight(),
+			(1. - p.z) * 80);
 	}
-	if (mEyePosition.getEyePosition().HasRightEyePosition)
+	if (mEyeX.hasRightEye())
 	{
+		ofPoint p = mEyeX.getRightEyeNormalized();
 		ofDrawCircle(
-			mEyePosition.getEyePosition().RightEyeXNormalized * ofGetWidth(),
-			mEyePosition.getEyePosition().RightEyeYNormalized * ofGetHeight(),
-			abs(mEyePosition.getEyePosition().RightEyeZNormalized - 1) * 80);
+			p.x * ofGetWidth(),
+			p.y * ofGetHeight(),
+			(1. - p.z) * 80);
 	}
 
 	// Draw gaze point
 	ofSetColor(255, 255, 255);
-	ofDrawCircle(mGazePoint.getGazePoint(), 20);
+	ofDrawCircle(mEyeX.getGazePointData().X, mEyeX.getGazePointData().Y, 20);
+
+	// Draw fixation
+	/*ofSetColor(0, 0, 255);
+	ofDrawCircle(mFixation.getPoint(), 10);*/
 
 	/*
 	stringstream ss;
@@ -58,8 +70,24 @@ void ofApp::draw(){
 void ofApp::keyPressed(int key)
 {
 	if (key == 'f') ofToggleFullscreen();
+
+	if (key == 'o')
+	{
+		mEyeX.setup();
+	}
+
+	if (key == 'c')
+	{
+		mEyeX.unregisterGazePointEventHandler();
+		mEyeX.close();
+	}
 }
 
 void ofApp::exit(){
-	mGazePoint.close();
+	//mGazePoint.close();
+	//mEyePosition.close();
+	//mFixation.close();
+	mEyeX.unregisterGazePointEventHandler();
+	mEyeX.unregisterEyePositionEventHandler();
+	mEyeX.close();
 }

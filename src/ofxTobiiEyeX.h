@@ -4,57 +4,83 @@
 #include "ofMain.h"
 #include "EyeX.h"
 
-namespace ofxTobiiEyeX
+class ofxTobiiEyeX
 {
-	class BaseTobiiEyeXApi
-	{
-	protected:
+protected:
+	typedef struct {
 		TX_CONTEXTHANDLE hContext;
 		TX_HANDLE hGlobalInteractorSnapshot;
+		TX_TICKET hConnectionStateChangedTicket;
+		TX_TICKET hEventHandlerTicket;
+		TX_GAZEPOINTDATAEVENTPARAMS eventParams;
+	} GazePositionContext;
 
-	public:
-		BaseTobiiEyeXApi();
-		virtual ~BaseTobiiEyeXApi();
+	typedef struct {
+		TX_CONTEXTHANDLE hContext;
+		TX_HANDLE hGlobalInteractorSnapshot;
+		TX_TICKET hConnectionStateChangedTicket;
+		TX_TICKET hEventHandlerTicket;
+		TX_EYEPOSITIONDATAEVENTPARAMS eventParams;
+	} EyePositionContext;
 
-		virtual void update() = 0;
-		virtual bool open() = 0;
-		virtual bool close() = 0;
-	};
+	typedef struct {
+		TX_CONTEXTHANDLE hContext;
+		TX_HANDLE hGlobalInteractorSnapshot;
+		TX_TICKET hConnectionStateChangedTicket;
+		TX_TICKET hEventHandlerTicket;
+		TX_FIXATIONDATAEVENTPARAMS eventParams;
+	} FixationContext;
 
-	class GazePoint : public BaseTobiiEyeXApi
-	{
-	protected:
-		TX_GAZEPOINTDATAEVENTPARAMS m_GazePointDataEventParams;
+	GazePositionContext GPContext;
+	EyePositionContext EPContext;
+	FixationContext FContext;
 
-	public:
-		GazePoint();
-		virtual ~GazePoint();
+public:
+	ofxTobiiEyeX();
+	virtual ~ofxTobiiEyeX();
 
-		void update();
-		bool open(TX_CONSTSTRING InstractorId, TX_GAZEPOINTDATAPARAMS params);
-		bool open();
-		bool close();
+	bool setup();
+	bool close();
 
-		inline const TX_GAZEPOINTDATAEVENTPARAMS& getGazePointParams() { return m_GazePointDataEventParams; }
-		inline ofPoint getGazePoint() { return ofPoint(m_GazePointDataEventParams.X, m_GazePointDataEventParams.Y); }
-	};
 
-	class EyePosition : public BaseTobiiEyeXApi
-	{
-	protected:
-		TX_EYEPOSITIONDATAEVENTPARAMS m_EyePositionDataEventParams;
+	bool registerGazePointEventHandler(const string& InteractorId, TX_GAZEPOINTDATAMODE params);
+	bool unregisterGazePointEventHandler();
+	bool registerEyePositionEventHandler(const string& InteractorId);
+	bool unregisterEyePositionEventHandler();
+	//bool registerFixationEventHandler(const string& InteractorId, TX_FIXATIONDATAMODE params);
+	//bool unregisterFixationEventHandler();
+	
+	inline const TX_GAZEPOINTDATAEVENTPARAMS& getGazePointData() const { return GPContext.eventParams; }
+	inline const TX_EYEPOSITIONDATAEVENTPARAMS& getEyePositionData() const { return EPContext.eventParams; }
 
-	public:
-		EyePosition();
-		virtual ~EyePosition();
-
-		void update();
-		bool open(TX_CONSTSTRING InstractorId);
-		bool open();
-		bool close();
-
-		inline TX_EYEPOSITIONDATAEVENTPARAMS& getEyePosition() { return m_EyePositionDataEventParams; }
-	};
-}
+	// get as other types
+	inline ofPoint getLeftEye() {
+		return ofPoint(
+			EPContext.eventParams.LeftEyeX,
+			EPContext.eventParams.LeftEyeY,
+			EPContext.eventParams.LeftEyeZ);
+	}
+	inline ofPoint getLeftEyeNormalized() {
+		return ofPoint(
+			EPContext.eventParams.LeftEyeXNormalized,
+			EPContext.eventParams.LeftEyeYNormalized,
+			EPContext.eventParams.LeftEyeZNormalized);
+	}
+	inline ofPoint getRightEye() {
+		return ofPoint(
+			EPContext.eventParams.RightEyeX,
+			EPContext.eventParams.RightEyeY,
+			EPContext.eventParams.RightEyeZ);
+	}
+	inline ofPoint getRightEyeNormalized() {
+		return ofPoint(
+			EPContext.eventParams.RightEyeXNormalized,
+			EPContext.eventParams.RightEyeYNormalized,
+			EPContext.eventParams.RightEyeZNormalized);
+	}
+	inline bool hasLeftEye() { return EPContext.eventParams.HasLeftEyePosition; }
+	inline bool hasRightEye() { return EPContext.eventParams.HasRightEyePosition; }
+	inline double getTimestamp() { return EPContext.eventParams.Timestamp; }
+};
 
 #endif
