@@ -4,21 +4,17 @@
 void ofApp::setup(){
 	ofSetCircleResolution(60);
 
-	//mGazePoint.open();
-	//mEyePosition.open();
-	//mFixation.open();
-
 	mEyeX.setup();
-	mEyeX.registerGazePointEventHandler("TestGazePoint", TX_GAZEPOINTDATAMODE_LIGHTLYFILTERED);
-	mEyeX.registerEyePositionEventHandler("TestEyePosition");
+
+	mEyeX.registerGazePointEventHandler();
+	mEyeX.registerEyePositionEventHandler();
+	mEyeX.registerFixationEventHandler();
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
 
-	//mGazePoint.update();
-	//mEyePosition.update();
-	//mFixation.update();
+	mEyeX.update();
 }
 
 //--------------------------------------------------------------
@@ -27,6 +23,7 @@ void ofApp::draw(){
 
 	// Draw eye position
 	ofSetColor(0, 255, 0);
+	ofFill();
 	if (mEyeX.hasLeftEye())
 	{
 		ofPoint p = mEyeX.getLeftEyeNormalized();
@@ -49,8 +46,20 @@ void ofApp::draw(){
 	ofDrawCircle(mEyeX.getGazePointData().X, mEyeX.getGazePointData().Y, 20);
 
 	// Draw fixation
-	/*ofSetColor(0, 0, 255);
-	ofDrawCircle(mFixation.getPoint(), 10);*/
+	switch (mEyeX.getFixationData().FixationDataMode)
+	{
+	case TX_FIXATIONDATAEVENTTYPE_BEGIN:
+		ofSetColor(255, 0, 0);
+		break;
+	case TX_FIXATIONDATAEVENTTYPE_END:
+		ofSetColor(0, 0, 255);
+		break;
+	case TX_FIXATIONDATAEVENTTYPE_DATA:
+		ofSetColor(255, 0, 255);
+		break;
+	}
+	ofNoFill();
+	ofDrawCircle(mEyeX.getFixationPoint(), 25);
 
 	/*
 	stringstream ss;
@@ -71,23 +80,13 @@ void ofApp::keyPressed(int key)
 {
 	if (key == 'f') ofToggleFullscreen();
 
-	if (key == 'o')
-	{
-		mEyeX.setup();
-	}
-
-	if (key == 'c')
-	{
-		mEyeX.unregisterGazePointEventHandler();
-		mEyeX.close();
-	}
+	
 }
 
 void ofApp::exit(){
-	//mGazePoint.close();
-	//mEyePosition.close();
-	//mFixation.close();
+	
 	mEyeX.unregisterGazePointEventHandler();
 	mEyeX.unregisterEyePositionEventHandler();
+	mEyeX.unregisterFixationEventHandler();
 	mEyeX.close();
 }

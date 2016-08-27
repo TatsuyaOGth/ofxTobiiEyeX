@@ -5,42 +5,56 @@
 #include <assert.h>
 
 
-// ID of the global interactor that provides our data stream; must be unique within the application.
-static const string smAddonName = "ofxTogiiEyeX";
+static const string smAddonName = "EyeX";
 
-/*
- * Callback function invoked when a snapshot has been committed.
- */
-void TX_CALLCONVENTION OnSnapshotCommitted(TX_CONSTHANDLE hAsyncData, TX_USERPARAM param)
+TX_GAZEPOINTDATAEVENTPARAMS ofxTobiiEyeX::smGazePointDataEventParams;
+TX_EYEPOSITIONDATAEVENTPARAMS ofxTobiiEyeX::smEyePositionEventParams;
+TX_FIXATIONDATAEVENTPARAMS ofxTobiiEyeX::smFixationEventParams;
+
+ofxTobiiEyeX::ofxTobiiEyeX()
 {
-	// check the result code using an assertion.
-	// this will catch validation errors and runtime errors in debug builds. in release builds it won't do anything.
+}
 
+ofxTobiiEyeX::~ofxTobiiEyeX()
+{
+	if (isInitialized())
+	{
+		if (isRegisteredGazePointEventHandler())
+			unregisterGazePointEventHandler();
+
+		if (isRegisteredEyePositionEventHandler())
+			unregisterEyePositionEventHandler();
+
+		if (isRegisteredFixationEventHandler())
+			unregisterFixationEventHandler();
+
+		close();
+	}
+}
+
+void TX_CALLCONVENTION ofxTobiiEyeX::OnSnapshotCommitted(TX_CONSTHANDLE hAsyncData, TX_USERPARAM param)
+{
 	TX_RESULT result = TX_RESULT_UNKNOWN;
 	txGetAsyncDataResultCode(hAsyncData, &result);
 	assert(result == TX_RESULT_OK || result == TX_RESULT_CANCELLED);
 }
 
-/*
- * Callback function invoked when the status of the connection to the EyeX Engine has changed.
- */
-void TX_CALLCONVENTION OnEngineConnectionStateChanged(TX_CONNECTIONSTATE connectionState, TX_USERPARAM userParam)
+void TX_CALLCONVENTION ofxTobiiEyeX::OnEngineConnectionStateChanged(TX_CONNECTIONSTATE connectionState, TX_USERPARAM param)
 {
 	switch (connectionState) {
 	case TX_CONNECTIONSTATE_CONNECTED: {
-			BOOL success;
-			ofLogNotice(smAddonName, "The connection state is now CONNECTED (We are connected to the EyeX Engine)");
-			// commit the snapshot with the global interactor as soon as the connection to the engine is established.
-			// (it cannot be done earlier because committing means "send to the engine".)
-			success = txCommitSnapshotAsync((TX_HANDLE)userParam, OnSnapshotCommitted, NULL) == TX_RESULT_OK;
-			if (!success) {
-				ofLogError(smAddonName, "Failed to initialize the data stream.");
-			}
-			else {
-				ofLogNotice(smAddonName, "Waiting for eye position data to start streaming...");
-			}
+		bool success;
+		ofLogNotice(smAddonName, "The connection state is now CONNECTED (We are connected to the EyeX Engine)");
+
+		success = txCommitSnapshotAsync((TX_HANDLE)param, OnSnapshotCommitted, nullptr) == TX_RESULT_OK;
+		if (!success) {
+			ofLogError(smAddonName, "Failed to initialize the data stream.");
 		}
-		break;
+		else {
+			ofLogNotice(smAddonName, "Waiting for eye position data to start streaming...");
+		}
+	}
+		 break;
 
 	case TX_CONNECTIONSTATE_DISCONNECTED:
 		ofLogNotice(smAddonName, "The connection state is now DISCONNECTED (We are disconnected from the EyeX Engine)");
@@ -60,51 +74,39 @@ void TX_CALLCONVENTION OnEngineConnectionStateChanged(TX_CONNECTIONSTATE connect
 	}
 }
 
-/*
- * Callback function invoked when an event has been received from the EyeX Engine.
- */
-void TX_CALLCONVENTION HandleEvent(TX_CONSTHANDLE hAsyncData, TX_USERPARAM userParam)
+void TX_CALLCONVENTION ofxTobiiEyeX::HandleEvent(TX_CONSTHANDLE hAsyncData, TX_USERPARAM param)
 {
 	TX_HANDLE hEvent = TX_EMPTY_HANDLE;
 	TX_HANDLE hBehavior = TX_EMPTY_HANDLE;
 
 	txGetAsyncDataContent(hAsyncData, &hEvent);
-
+	
 	if (txGetEventBehavior(hEvent, &hBehavior, TX_BEHAVIORTYPE_GAZEPOINTDATA) == TX_RESULT_OK)
 	{
-		if (txGetGazePointDataEventParams(hBehavior, (TX_GAZEPOINTDATAEVENTPARAMS*)userParam) != TX_RESULT_OK)
+		if (txGetGazePointDataEventParams(hBehavior, &smGazePointDataEventParams) != TX_RESULT_OK)
 		{
 			ofLogError(smAddonName, "Failed to interpret gaze data event packet.");
 		}
-		txReleaseObject(&hBehavior);
 	}
-
+	
 	if (txGetEventBehavior(hEvent, &hBehavior, TX_BEHAVIORTYPE_EYEPOSITIONDATA) == TX_RESULT_OK)
 	{
-		if (txGetEyePositionDataEventParams(hBehavior, (TX_EYEPOSITIONDATAEVENTPARAMS*)userParam) != TX_RESULT_OK)
+		if (txGetEyePositionDataEventParams(hBehavior, &smEyePositionEventParams) != TX_RESULT_OK)
 		{
-			ofLogError(smAddonName, "Failed to interpret eye position data event packet.");
+			ofLogError(smAddonName, "Failed to interpret eye position event packet.");
 		}
-		txReleaseObject(&hBehavior);
 	}
 
-	if (txGetEventBehavior(hEvent, &hBehavior, TX_BEHAVIORTYPE_FIXATIONDATA) == TX_RESULT_OK) {
-		if (txGetFixationDataEventParams(hBehavior, (TX_FIXATIONDATAEVENTPARAMS*)userParam) != TX_RESULT_OK)
+	if (txGetEventBehavior(hEvent, &hBehavior, TX_BEHAVIORTYPE_FIXATIONDATA) == TX_RESULT_OK)
+	{
+		if (txGetFixationDataEventParams(hBehavior, &smFixationEventParams) != TX_RESULT_OK)
 		{
-			ofLogWarning(smAddonName, "Failed to interpret fixation data event packet.");
+			ofLogError(smAddonName, "Failed to interpret fixation event packet.");
 		}
-		txReleaseObject(&hBehavior);
 	}
 
+	txReleaseObject(&hBehavior);
 	txReleaseObject(&hEvent);
-}
-
-ofxTobiiEyeX::ofxTobiiEyeX()
-{
-}
-
-ofxTobiiEyeX::~ofxTobiiEyeX()
-{
 }
 
 bool ofxTobiiEyeX::setup()
@@ -127,96 +129,152 @@ bool ofxTobiiEyeX::close()
 	return true;
 }
 
-bool ofxTobiiEyeX::registerGazePointEventHandler(const string& InteractorId, TX_GAZEPOINTDATAMODE mode)
+void ofxTobiiEyeX::update()
 {
-	GPContext.hContext = TX_EMPTY_HANDLE;
-	GPContext.hConnectionStateChangedTicket = TX_INVALID_TICKET;
-	GPContext.hEventHandlerTicket = TX_INVALID_TICKET;
-	TX_HANDLE hInteractor = TX_EMPTY_HANDLE;
-	TX_GAZEPOINTDATAPARAMS params = { mode };
-	bool success = true;
-
-	success &= txCreateContext(&GPContext.hContext, TX_FALSE) == TX_RESULT_OK;
-
-	success &= txCreateGlobalInteractorSnapshot(
-		GPContext.hContext,
-		InteractorId.c_str(),
-		&GPContext.hGlobalInteractorSnapshot,
-		&hInteractor) == TX_RESULT_OK;
-	success &= txCreateGazePointDataBehavior(hInteractor, &params) == TX_RESULT_OK;
+	if (isRegisteredGazePointEventHandler())
+		mGazePointDataEventParams = smGazePointDataEventParams;
 	
-	success &= txRegisterConnectionStateChangedHandler(GPContext.hContext, &GPContext.hConnectionStateChangedTicket, OnEngineConnectionStateChanged, GPContext.hGlobalInteractorSnapshot) == TX_RESULT_OK;
-	success &= txRegisterEventHandler(GPContext.hContext, &GPContext.hEventHandlerTicket, HandleEvent, &GPContext.eventParams) == TX_RESULT_OK;
-	success &= txEnableConnection(GPContext.hContext) == TX_RESULT_OK;
+	if (isRegisteredEyePositionEventHandler())
+		mEyePositionEventParams = smEyePositionEventParams;
 
-	if (!success)
-	{
-		ofLogError(smAddonName, "Registing gaze point data event handler failed.");
-	}
-	return success;
+	if (isRegisteredFixationEventHandler())
+		mFixationEventParams = smFixationEventParams;
 }
 
-bool ofxTobiiEyeX::unregisterGazePointEventHandler()
+bool ofxTobiiEyeX::unregisterEventHandler(Handle& handle)
 {
 	bool success = true;
-	
-	success &= txUnregisterConnectionStateChangedHandler(GPContext.hContext, GPContext.hConnectionStateChangedTicket) == TX_RESULT_OK;
-	success &= txUnregisterEventHandler(GPContext.hContext, GPContext.hEventHandlerTicket) == TX_RESULT_OK;
-	success &= txDisableConnection(GPContext.hContext) == TX_RESULT_OK;
-	success &= txReleaseObject(&GPContext.hGlobalInteractorSnapshot) == TX_RESULT_OK;
-	success &= txShutdownContext(GPContext.hContext, TX_CLEANUPTIMEOUT_DEFAULT, TX_FALSE) == TX_RESULT_OK;
-	success &= txReleaseContext(&GPContext.hContext) == TX_RESULT_OK;
+
+	success &= txUnregisterConnectionStateChangedHandler(handle.hContext, handle.hConnectionStateChangedTicket) == TX_RESULT_OK;
+	success &= txUnregisterEventHandler(handle.hContext, handle.hEventHandlerTicket) == TX_RESULT_OK;
+	success &= txDisableConnection(handle.hContext) == TX_RESULT_OK;
+	success &= txReleaseObject(&handle.hGlobalInteractorSnapshot) == TX_RESULT_OK;
+	//success &= txShutdownContext(handle.hContext, TX_CLEANUPTIMEOUT_DEFAULT, TX_FALSE) == TX_RESULT_OK;
+	TX_RESULT res = txShutdownContext(handle.hContext, TX_CLEANUPTIMEOUT_DEFAULT, TX_FALSE);
+	success &= txReleaseContext(&handle.hContext) == TX_RESULT_OK;
 
 	if (!success)
 	{
 		ofLogError(smAddonName, "EyeX could not be shut down cleanly.");
+	}
+	return success;
+}
+
+bool ofxTobiiEyeX::registerGazePointEventHandler(const string& InteractorId, TX_GAZEPOINTDATAMODE mode)
+{
+	auto& handle = mGazePointHandle;
+	handle.hConnectionStateChangedTicket = TX_INVALID_TICKET;
+	handle.hEventHandlerTicket = TX_INVALID_TICKET;
+	TX_CONSTSTRING ID = InteractorId.c_str();
+	TX_GAZEPOINTDATAPARAMS params = { mode };
+	TX_HANDLE hInteractor = TX_EMPTY_HANDLE;
+	bool success = true;
+
+	success &= txCreateContext(&handle.hContext, TX_FALSE) == TX_RESULT_OK;
+	success &= txCreateGlobalInteractorSnapshot(handle.hContext, ID, &handle.hGlobalInteractorSnapshot, &hInteractor) == TX_RESULT_OK;
+		
+	success &= txCreateGazePointDataBehavior(hInteractor, &params) == TX_RESULT_OK;
+
+	success &= txReleaseObject(&hInteractor) == TX_RESULT_OK;
+	success &= txRegisterConnectionStateChangedHandler(handle.hContext, &handle.hConnectionStateChangedTicket, OnEngineConnectionStateChanged, handle.hGlobalInteractorSnapshot) == TX_RESULT_OK;
+	success &= txRegisterEventHandler(handle.hContext, &handle.hEventHandlerTicket, HandleEvent, nullptr) == TX_RESULT_OK;
+	success &= txEnableConnection(handle.hContext) == TX_RESULT_OK;
+	
+	if (!success)
+	{
+		ofLogError(smAddonName, "Registing gaze point data event handler was failed.");
 	}
 	return success;
 }
 
 bool ofxTobiiEyeX::registerEyePositionEventHandler(const string& InteractorId)
 {
-	EPContext.hContext = TX_EMPTY_HANDLE;
-	EPContext.hConnectionStateChangedTicket = TX_INVALID_TICKET;
-	EPContext.hEventHandlerTicket = TX_INVALID_TICKET;
+	auto& handle = mEyePositionHandle;
+	handle.hConnectionStateChangedTicket = TX_INVALID_TICKET;
+	handle.hEventHandlerTicket = TX_INVALID_TICKET;
+	TX_CONSTSTRING ID = InteractorId.c_str();
+	TX_HANDLE params = TX_EMPTY_HANDLE;
 	TX_HANDLE hInteractor = TX_EMPTY_HANDLE;
-	TX_HANDLE hBehaviorWithoutParameters = TX_EMPTY_HANDLE;
 	bool success = true;
 
-	success &= txCreateContext(&EPContext.hContext, TX_FALSE) == TX_RESULT_OK;
+	success &= txCreateContext(&handle.hContext, TX_FALSE) == TX_RESULT_OK;
+	success &= txCreateGlobalInteractorSnapshot(handle.hContext, ID, &handle.hGlobalInteractorSnapshot, &hInteractor) == TX_RESULT_OK;
 
-	success &= txCreateGlobalInteractorSnapshot(
-		EPContext.hContext,
-		InteractorId.c_str(),
-		&EPContext.hGlobalInteractorSnapshot,
-		&hInteractor) == TX_RESULT_OK;
-	success &= txCreateInteractorBehavior(hInteractor, &hBehaviorWithoutParameters, TX_BEHAVIORTYPE_EYEPOSITIONDATA) == TX_RESULT_OK;
+	success &= txCreateInteractorBehavior(hInteractor, &params, TX_BEHAVIORTYPE_EYEPOSITIONDATA) == TX_RESULT_OK;
 
-	success &= txRegisterConnectionStateChangedHandler(EPContext.hContext, &EPContext.hConnectionStateChangedTicket, OnEngineConnectionStateChanged, EPContext.hGlobalInteractorSnapshot) == TX_RESULT_OK;
-	success &= txRegisterEventHandler(EPContext.hContext, &EPContext.hEventHandlerTicket, HandleEvent, &EPContext.eventParams) == TX_RESULT_OK;
-	success &= txEnableConnection(EPContext.hContext) == TX_RESULT_OK;
+	success &= txReleaseObject(&hInteractor) == TX_RESULT_OK;
+	success &= txReleaseObject(&params) == TX_RESULT_OK;
+	success &= txRegisterConnectionStateChangedHandler(handle.hContext, &handle.hConnectionStateChangedTicket, OnEngineConnectionStateChanged, handle.hGlobalInteractorSnapshot) == TX_RESULT_OK;
+	success &= txRegisterEventHandler(handle.hContext, &handle.hEventHandlerTicket, HandleEvent, nullptr) == TX_RESULT_OK;
+	success &= txEnableConnection(handle.hContext) == TX_RESULT_OK;
 
 	if (!success)
 	{
-		ofLogError(smAddonName, "Registing gaze point data event handler failed.");
+		ofLogError(smAddonName, "Registing eye position data event handler was failed.");
 	}
 	return success;
+}
+
+bool ofxTobiiEyeX::registerFixationEventHandler(const string& InteractorId, TX_FIXATIONDATAMODE mode)
+{
+	auto& handle = mFixationHandle;
+	handle.hConnectionStateChangedTicket = TX_INVALID_TICKET;
+	handle.hEventHandlerTicket = TX_INVALID_TICKET;
+	TX_CONSTSTRING ID = InteractorId.c_str();
+	TX_FIXATIONDATAPARAMS params = { mode };
+	TX_HANDLE hInteractor = TX_EMPTY_HANDLE;
+	bool success = true;
+
+	success &= txCreateContext(&handle.hContext, TX_FALSE) == TX_RESULT_OK;
+	success &= txCreateGlobalInteractorSnapshot(handle.hContext, ID, &handle.hGlobalInteractorSnapshot, &hInteractor) == TX_RESULT_OK;
+
+	success &= txCreateFixationDataBehavior(hInteractor, &params) == TX_RESULT_OK;
+
+	success &= txReleaseObject(&hInteractor) == TX_RESULT_OK;
+	success &= txRegisterConnectionStateChangedHandler(handle.hContext, &handle.hConnectionStateChangedTicket, OnEngineConnectionStateChanged, handle.hGlobalInteractorSnapshot) == TX_RESULT_OK;
+	success &= txRegisterEventHandler(handle.hContext, &handle.hEventHandlerTicket, HandleEvent, nullptr) == TX_RESULT_OK;
+	success &= txEnableConnection(handle.hContext) == TX_RESULT_OK;
+
+	if (!success)
+	{
+		ofLogError(smAddonName, "Registing fixation data event handler was failed.");
+	}
+	return success;
+}
+
+bool ofxTobiiEyeX::unregisterGazePointEventHandler()
+{
+	return unregisterEventHandler(mGazePointHandle);
 }
 
 bool ofxTobiiEyeX::unregisterEyePositionEventHandler()
 {
-	bool success = true;
-	success &= txUnregisterConnectionStateChangedHandler(EPContext.hContext, EPContext.hConnectionStateChangedTicket) == TX_RESULT_OK;
-	success &= txUnregisterEventHandler(EPContext.hContext, EPContext.hEventHandlerTicket) == TX_RESULT_OK;
-	success &= txDisableConnection(EPContext.hContext) == TX_RESULT_OK;
-	success &= txReleaseObject(&EPContext.hGlobalInteractorSnapshot) == TX_RESULT_OK;
-	success &= txShutdownContext(EPContext.hContext, TX_CLEANUPTIMEOUT_DEFAULT, TX_FALSE) == TX_RESULT_OK;
-	success &= txReleaseContext(&EPContext.hContext) == TX_RESULT_OK;
-
-	if (!success)
-	{
-		ofLogError(smAddonName, "EyeX could not be shut down cleanly.");
-	}
-	return success;
+	return unregisterEventHandler(mEyePositionHandle);
 }
 
+bool ofxTobiiEyeX::unregisterFixationEventHandler()
+{
+	return unregisterEventHandler(mFixationHandle);
+}
+
+bool ofxTobiiEyeX::isInitialized()
+{
+	BOOL bInitialized;
+	txIsEyeXInitialized(&bInitialized);
+	return bInitialized != 0;
+}
+
+bool ofxTobiiEyeX::isRegisteredGazePointEventHandler()
+{
+	return mGazePointHandle.hContext != TX_EMPTY_HANDLE;
+}
+
+bool ofxTobiiEyeX::isRegisteredEyePositionEventHandler()
+{
+	return mEyePositionHandle.hContext != TX_EMPTY_HANDLE;
+}
+
+bool ofxTobiiEyeX::isRegisteredFixationEventHandler()
+{
+	return mFixationHandle.hContext != TX_EMPTY_HANDLE;
+}

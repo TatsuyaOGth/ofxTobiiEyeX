@@ -12,8 +12,5 @@ class ofApp : public ofBaseApp{
 		void keyPressed(int key);
 		void exit();
 
-		/*ofxTobiiEyeX::GazePoint mGazePoint;
-		ofxTobiiEyeX::EyePosition mEyePosition;
-		ofxTobiiEyeX::Fixations mFixation;*/
 		ofxTobiiEyeX mEyeX;
 };
