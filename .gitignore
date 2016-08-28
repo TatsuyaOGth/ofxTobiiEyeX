@@ -6,14 +6,14 @@
 
 # Compiled Dynamic libraries
 *.so
-*.dylib
-*.dll
+#*.dylib
+#*.dll
 
 # Compiled Static libraries
 *.lai
 *.la
 *.a
-*.lib
+#*.lib
 
 # Executables
 *.exe
@@ -28,3 +28,13 @@
 *.sdf
 *.suo
 *.opensdf
+
+#example
+example/emptyExample.VC.VC.opendb
+example/emptyExample.VC.db
+example/emptyExample.sln
+example/emptyExample.vcxproj
+example/emptyExample.vcxproj.filters
+example/emptyExample.vcxproj.user
+*bin/*
+!*bin/data
